@@ -1,12 +1,15 @@
 require 'test_helper'
+require 'capybara'
 
 describe ThingsController do
   let (:thing) { Thing::Create[thing: {name: "Trailblazer"}].model }
 
   describe "#new" do
     it "#new [HTML]" do
-      # TODO: please make Capybara matchers work with this!
       get :new
+
+      page.must_have_css "form #thing_name"
+
       assert_select "form #thing_name"
       assert_select "form #thing_name.readonly", false
     end

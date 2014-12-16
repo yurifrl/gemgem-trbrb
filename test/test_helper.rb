@@ -8,6 +8,34 @@ MiniTest::Spec.class_eval do
   after :each do
     # DatabaseCleaner.clean
     Thing.delete_all
-
   end
+end
+
+ActionController::TestCase.class_eval do
+  def get(*)
+    super
+    @page = Capybara.string response.body
+  end
+
+  def post(*)
+    super
+    @page = Capybara.string response.body
+  end
+
+  def put(*)
+    super
+    @page = Capybara.string response.body
+  end
+
+  def delete(*)
+    super
+    @page = Capybara.string response.body
+  end
+
+  def patch(*)
+    super
+    @page = Capybara.string response.body
+  end
+
+  attr_reader :page
 end
