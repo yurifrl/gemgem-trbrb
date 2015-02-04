@@ -20,7 +20,7 @@ group :development do
   gem "rails_layout"
 end
 group :development, :test do
-  gem "sqlite3"
+  gem "pg"
   gem "minitest-spec-rails"
   # gem "minitest-rails-capybara"
   gem "capybara_minitest_spec"
@@ -50,3 +50,5 @@ gem "rails-timeago"
 gem "email_validator"
 
 gem "foundation-icons-sass-rails"
+
+gem "fatalistic" # Table.lock {}

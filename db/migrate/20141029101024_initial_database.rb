@@ -2,7 +2,7 @@ class InitialDatabase < ActiveRecord::Migration
   def change
     create_table :comments do |t|
       t.text    :body
-      t.column  :weight, 'integer unsigned'
+      t.integer  :weight
 
       t.integer :deleted
 
