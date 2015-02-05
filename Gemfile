@@ -19,19 +19,19 @@ group :development do
   gem "quiet_assets"
   gem "rails_layout"
 end
+gem "pg"
+
 group :development, :test do
-  gem "pg"
   gem "minitest-spec-rails"
   # gem "minitest-rails-capybara"
   gem "capybara_minitest_spec"
 end
 group :production do
-  gem "pg"
   gem "rails_12factor"
 end
 
 # gem "representable"
-gem "reform", "1.2.4" # git: "https://github.com/apotonick/reform.git"
+gem "reform", github: "apotonick/reform", branch: "naive-uniqueness-validator"
 # gem "reform", path: "../reform"
 gem "virtus"
 

@@ -23,9 +23,10 @@ class Comment < ActiveRecord::Base
       validates :weight, inclusion: { in: weights.keys }
       validates :thing, :user, presence: true
 
+      require "reform/form/validation/unique_validator.rb"
       property :user do
         property :email
-        validates :email, presence: true, email: true
+        validates :email, presence: true, email: true, unique: true
       end
 
       def weight
@@ -33,10 +34,15 @@ class Comment < ActiveRecord::Base
       end
     end
 
+    require "active_record/locking/fatalistic"
     def process(params)
-      validate(params[:comment]) do |f|
-        f.save # save comment and user.
+      result = nil
+      User.lock do # lock the users table and save. this is a proof-of-concept how operations can wrap entire transactions.
+        result = validate(params[:comment]) do |f|
+          f.save # save comment and user.
+        end
       end
+      result
     end
 
     def thing
