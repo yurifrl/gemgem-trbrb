@@ -26,7 +26,7 @@ class Comment < ActiveRecord::Base
       require "reform/form/validation/unique_validator.rb"
       property :user do
         property :email
-        validates :email, presence: true, email: true, unique: true
+        validates :email, presence: true, email: true#, unique: true
       end
 
       def weight
@@ -36,13 +36,15 @@ class Comment < ActiveRecord::Base
 
     require "active_record/locking/fatalistic"
     def process(params)
-      result = nil
-      User.lock do # lock the users table and save. this is a proof-of-concept how operations can wrap entire transactions.
-        result = validate(params[:comment]) do |f|
+      begin
+        validate(params[:comment]) do |f|
           f.save # save comment and user.
         end
+      rescue
+        # ActiveRecord::RecordNotUnique
+        errors.add(:user, "email not unique")
+        invalid! # returns result.
       end
-      result
     end
 
     def thing
@@ -56,3 +58,5 @@ class Comment < ActiveRecord::Base
     end
   end
 end
+
+# TODO: add User unique test
