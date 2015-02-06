@@ -5,6 +5,11 @@
   = f.input :name, placeholder: "Name", label: false, readonly: @form.readonly?(:name)
   = f.input :description, placeholder: "Description", label: false
 
+  %fieldset
+    %legend Do you know any authors?
+    = f.fields_for :users do |a|
+      = a.input :email
+
   = f.button :submit, class: :expand
 
 = @form.errors.messages

@@ -26,7 +26,7 @@ class Comment < ActiveRecord::Base
       require "reform/form/validation/unique_validator.rb"
       property :user do
         property :email
-        validates :email, presence: true, email: true#, unique: true
+        validates :email, presence: true, email: true, unique: true
       end
 
       def weight
@@ -36,14 +36,8 @@ class Comment < ActiveRecord::Base
 
     require "active_record/locking/fatalistic"
     def process(params)
-      begin
-        validate(params[:comment]) do |f|
-          f.save # save comment and user.
-        end
-      rescue
-        # ActiveRecord::RecordNotUnique
-        errors.add(:user, "email not unique")
-        invalid! # returns result.
+      validate(params[:comment]) do |f|
+        f.save # save comment and user.
       end
     end
 

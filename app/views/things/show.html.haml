@@ -3,7 +3,13 @@
     #{@thing.name}
     = link_to "Edit", edit_thing_path(@thing)
 
-#{@thing.description}
+.description
+  #{@thing.description}
+
+.authors
+  By
+  - @thing.users.each do |user|
+    = user.email
 
 %hr
 

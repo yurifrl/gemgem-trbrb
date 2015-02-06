@@ -3,6 +3,7 @@ class ThingsController < ApplicationController
 
   def new
     form Thing::Create
+    # @form.prepopulate!
   end
 
   def create
