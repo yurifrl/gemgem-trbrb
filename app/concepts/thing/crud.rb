@@ -12,7 +12,7 @@ class Thing < ActiveRecord::Base
 
       collection :users,
         # prepopulate: ->(*) { [User.new, User.new] },
-        populate_if_empty: User,
+        populate_if_empty: ->(params, *) { (user = User.find_by_email(params["email"])) ? user : User.new },
         skip_if: :all_blank do
           property :email
           validates :email, presence: true, email: true
