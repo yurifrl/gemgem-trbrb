@@ -2,7 +2,7 @@
 # TODO: make :populate_if_empty dynamic (allow instance methods).
 class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
-    include CRUD
+    include CRUD, Dispatch
     model Thing, :create
 
     contract do
@@ -30,7 +30,7 @@ class Thing < ActiveRecord::Base
       validate(params[:thing]) do |f|
         f.save
 
-        notify_authors!
+        dispatch :notify_authors!
       end
     end
 
@@ -43,6 +43,7 @@ class Thing < ActiveRecord::Base
 
   class Update < Create
     action :update
+    skip_dispatch :notify_authors!
 
     contract do
       property :name, writeable: false
