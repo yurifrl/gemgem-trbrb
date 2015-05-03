@@ -1,15 +1,4 @@
 GIT
-  remote: git://github.com/apotonick/reform.git
-  revision: a337e6323159a6f0e3bf32f28f32837d147dfc45
-  branch: naive-uniqueness-validator
-  specs:
-    reform (1.2.6)
-      activemodel
-      disposable (~> 0.0.5)
-      representable (~> 2.1.0)
-      uber (~> 0.0.11)
-
-GIT
   remote: https://github.com/apotonick/kaminari-cells
   revision: 793376eee18f6bf904a2db6627b7ec1e6d4a00b8
   branch: cells-4
@@ -25,6 +14,17 @@ GIT
     cells-haml (0.0.1)
       cells (~> 4.0.0.alpha)
       haml (~> 4.0)
+
+GIT
+  remote: git://github.com/apotonick/reform.git
+  revision: a337e6323159a6f0e3bf32f28f32837d147dfc45
+  branch: naive-uniqueness-validator
+  specs:
+    reform (1.2.6)
+      activemodel
+      disposable (~> 0.0.5)
+      representable (~> 2.1.0)
+      uber (~> 0.0.11)
 
 GEM
   remote: https://rubygems.org/

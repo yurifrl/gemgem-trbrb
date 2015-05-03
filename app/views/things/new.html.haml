@@ -8,7 +8,7 @@
   %fieldset
     %legend Do you know any authors?
     = f.fields_for :users do |a|
-      = a.input :email
+      = a.input :email#, readonly: a.object.readonly?(:email)
 
   = f.button :submit, class: :expand
 

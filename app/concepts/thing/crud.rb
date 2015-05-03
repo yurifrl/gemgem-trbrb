@@ -1,3 +1,5 @@
+# TODO: policy: users can only delete authors when they added them? Delete things. (chapt 9)
+# TODO: make :populate_if_empty dynamic (allow instance methods).
 class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
     include CRUD
@@ -11,7 +13,7 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        # prepopulate: ->(*) { [User.new, User.new] },
+        # prepopulate: ->(*) { users.size == 0 ? [User.new, User.new] : [User.new] },
         populate_if_empty: ->(params, *) { (user = User.find_by_email(params["email"])) ? user : User.new },
         skip_if: :all_blank do
           property :email
@@ -27,7 +29,15 @@ class Thing < ActiveRecord::Base
     def process(params)
       validate(params[:thing]) do |f|
         f.save
+
+        notify_authors!
       end
+    end
+
+  private
+    def notify_authors!
+      # TODO: mark new authors and send mails only to those.
+      model.users.collect { |user| NewUserMailer.welcome_email(user) }
     end
   end
 
@@ -36,6 +46,10 @@ class Thing < ActiveRecord::Base
 
     contract do
       property :name, writeable: false
+
+      collection :users, inherit: true do
+        property :email, writeable: false
+      end
     end
   end
 end

@@ -11,6 +11,7 @@ class ThingsController < ApplicationController
       return redirect_to op.model
     end
 
+    # @form.prepopulate! # TODO: must be @form.render
     render action: :new
   end
 
