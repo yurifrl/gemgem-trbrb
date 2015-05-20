@@ -15,7 +15,7 @@ class Comment < ActiveRecord::Base
       end
 
       property :body
-      property :weight, prepopulator: ->(*) { self.weight = "0" unless weight }
+      property :weight, prepopulator: ->(*) { self.weight = "0" }
       property :thing
 
       validates :body, length: { in: 6..160 }
