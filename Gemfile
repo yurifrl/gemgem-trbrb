@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 ruby "2.1.2"
-gem "rails", "4.1.6"
+gem "rails", "~> 4.1.0"
 gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.0.0"
@@ -30,14 +30,15 @@ group :production do
   gem "rails_12factor"
 end
 
-# gem "representable"
-gem "reform", github: "apotonick/reform", branch: "naive-uniqueness-validator"
-# gem "reform", path: "../reform"
+# gem "reform", github: "apotonick/reform", branch: "reform-2"
+gem "reform", path: "../reform"
+gem "disposable", path: "../disposable"
+# gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
-# gem "trailblazer", path: "../trailblazer"
-gem "trailblazer", "0.2.2"
+gem "trailblazer", path: "../trailblazer"
+# gem "trailblazer", "0.2.2"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "cells", path: "../cells"
 gem "cells", "4.0.0.beta2"
