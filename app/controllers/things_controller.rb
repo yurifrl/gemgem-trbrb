@@ -1,9 +1,12 @@
-class ThingsController < ApplicationController
+class ThingsController  < ApplicationController
   respond_to :html
 
   def new
+    # return render text: "yoo"
+    # Thing::Create
+    # return render text: "yoooo"
     form Thing::Create
-    # @form.prepopulate!
+    @form.prepopulate!
   end
 
   def create
@@ -33,6 +36,8 @@ class ThingsController < ApplicationController
 
   def edit
     form Thing::Update
+
+    @form.prepopulate!
 
     render action: :new
   end

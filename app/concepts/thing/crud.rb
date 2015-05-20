@@ -13,16 +13,13 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        # prepopulate: ->(*) { users.size == 0 ? [User.new, User.new] : [User.new] },
+        prepopulator: ->(*) { users.size == 0 ? self.users = [User.new, User.new, User.new] : users << User.new },
+
         populate_if_empty: ->(params, *) { (user = User.find_by_email(params["email"])) ? user : User.new },
         skip_if: :all_blank do
+
           property :email
           validates :email, presence: true, email: true
-      end
-
-      def users
-        return [User.new, User.new] if super.blank? # here, i offer one form to enter an author.
-        super # user fields were submitted.
       end
     end
 
