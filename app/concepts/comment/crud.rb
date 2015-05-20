@@ -5,7 +5,6 @@ class Comment < ActiveRecord::Base
 
     contract do
       include Reform::Form::ModelReflections
-      reform_2_0!
 
       def self.weights
         {"0" => "Nice!", "1" => "Rubbish!"}
@@ -16,7 +15,7 @@ class Comment < ActiveRecord::Base
       end
 
       property :body
-      property :weight
+      property :weight, prepopulator: ->(*) { self.weight = "0" unless weight }
       property :thing
 
       validates :body, length: { in: 6..160 }
@@ -27,10 +26,6 @@ class Comment < ActiveRecord::Base
       property :user do
         property :email
         validates :email, presence: true, email: true, unique: true
-      end
-
-      def weight
-        super or "0"
       end
     end
 

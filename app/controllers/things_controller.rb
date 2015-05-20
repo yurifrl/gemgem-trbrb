@@ -21,7 +21,7 @@ class ThingsController  < ApplicationController
   def show
     present Thing::Update
     form Comment::Create # overrides @model and @form!
-    # @form.prepopulate!
+    @form.prepopulate!
   end
 
   def create_comment
