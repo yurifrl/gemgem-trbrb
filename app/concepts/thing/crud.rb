@@ -13,9 +13,9 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        prepopulator: ->(*) { users.size == 0 ? self.users = [User.new, User.new, User.new] : users << User.new },
+        prepopulator: ->(*) { users.size == 0 ? self.users = [User.new, User.new] : users << User.new },
 
-        populate_if_empty: ->(params, *) { (user = User.find_by_email(params["email"])) ? user : User.new },
+        populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) or User.new },
         skip_if: :all_blank do
 
           property :email
@@ -45,9 +45,17 @@ class Thing < ActiveRecord::Base
     contract do
       property :name, writeable: false
 
-      collection :users, inherit: true do
-        property :email, writeable: false
+       collection :users, inherit: true,
+
+# populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) ? user : User.new },
+        skip_if: :all_blank do
+        property :email#, writeable: false
+
+        validates :email, presence: true, email: true # FIXME: inherit properly, ya cunt!
       end
+
+      require "pp"
+      pp object_representer_class.representable_attrs
     end
   end
 end
