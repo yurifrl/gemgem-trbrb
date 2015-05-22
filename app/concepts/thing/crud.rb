@@ -13,7 +13,7 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        prepopulator: ->(*) { users.size == 0 ? self.users = [User.new, User.new] : users << User.new },
+        prepopulator: ->(*) { (3 - users.size).times { users << User.new } },
 
         populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) or User.new },
         skip_if: :all_blank do
@@ -45,17 +45,15 @@ class Thing < ActiveRecord::Base
     contract do
       property :name, writeable: false
 
-       collection :users, inherit: true,
-
-# populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) ? user : User.new },
-        skip_if: :all_blank do
+      # DISCUSS: should inherit: true be default?
+      collection :users, inherit: true, skip_if: :skip_user? do
         property :email#, writeable: false
-
-        validates :email, presence: true, email: true # FIXME: inherit properly, ya cunt!
       end
 
-      require "pp"
-      pp object_representer_class.representable_attrs
+    private
+      def skip_user?(fragment, options)
+        return true if fragment["id"] # happy path. TODO: validate user add only once.
+      end
     end
   end
 end
