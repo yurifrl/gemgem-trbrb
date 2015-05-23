@@ -47,12 +47,17 @@ class Thing < ActiveRecord::Base
 
       # DISCUSS: should inherit: true be default?
       collection :users, inherit: true, skip_if: :skip_user? do
-        property :email#, writeable: false
+        property :email#, writeable: ->(*args) { raise args.inspect } #
       end
 
     private
       def skip_user?(fragment, options)
+        # skip when user is an existing one.
         return true if fragment["id"] # happy path. TODO: validate user add only once.
+        # return true if users[index] and users[index].model.persisted?
+
+        # replicate skip_if: :all_blank logic.
+        return true if fragment["email"].blank?
       end
     end
   end
