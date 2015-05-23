@@ -48,6 +48,10 @@ class Thing < ActiveRecord::Base
       # DISCUSS: should inherit: true be default?
       collection :users, inherit: true, skip_if: :skip_user? do
         property :email#, writeable: ->(*args) { raise args.inspect } #
+
+        def readonly?
+          model.persisted?
+        end
       end
 
     private
