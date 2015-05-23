@@ -18,8 +18,6 @@ class CommentCellTest < Cell::TestCase
   # .(:show)
   it do
     html = concept("comment/cell/grid", thing).(:show)
-    # puts html
-    html = Capybara.string(html)
 
     comments = html.all(:css, ".comment")
     comments.size.must_equal 3
@@ -53,7 +51,7 @@ class CommentCellTest < Cell::TestCase
   it do
     html = concept("comment/cell/grid", thing, page: 2).(:append)
 
-    html.must_match /replaceWith/
-    html.must_match /zavan@trb.org/
+    html.to_s.must_match /replaceWith/
+    html.to_s.must_match /zavan@trb.org/
   end
 end
