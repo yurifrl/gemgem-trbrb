@@ -13,13 +13,21 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        prepopulator: ->(*) { (3 - users.size).times { users << User.new } },
-
+        prepopulator: :prepopulate_users!,
         populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) or User.new },
         skip_if: :all_blank do
 
           property :email
           validates :email, presence: true, email: true
+
+        def readonly? # per form.
+          model.persisted?
+        end
+      end
+
+    private
+      def prepopulate_users!(args)
+        (3 - users.size).times { users << User.new }
       end
     end
 
@@ -48,10 +56,6 @@ class Thing < ActiveRecord::Base
       # DISCUSS: should inherit: true be default?
       collection :users, inherit: true, skip_if: :skip_user? do
         property :email#, writeable: ->(*args) { raise args.inspect } #
-
-        def readonly?
-          model.persisted?
-        end
       end
 
     private
