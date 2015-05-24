@@ -13,12 +13,12 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        prepopulator:      :prepopulate_users!,
-        populate_if_empty: :populate_users!,
-        skip_if:           :all_blank do
+          prepopulator:      :prepopulate_users!,
+          populate_if_empty: :populate_users!,
+          skip_if:           :all_blank do
 
-          property :email
-          validates :email, presence: true, email: true
+        property :email
+        validates :email, presence: true, email: true
 
         def readonly? # per form.
           model.persisted?
