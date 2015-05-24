@@ -13,9 +13,9 @@ class Thing < ActiveRecord::Base
       validates :description, length: {in: 4..160}, allow_blank: true
 
       collection :users,
-        prepopulator: :prepopulate_users!,
-        populate_if_empty: ->(params, *) { User.find_by_email(params["email"]) or User.new },
-        skip_if: :all_blank do
+        prepopulator:      :prepopulate_users!,
+        populate_if_empty: :populate_users!,
+        skip_if:           :all_blank do
 
           property :email
           validates :email, presence: true, email: true
@@ -26,8 +26,12 @@ class Thing < ActiveRecord::Base
       end
 
     private
-      def prepopulate_users!(args)
+      def prepopulate_users!(options)
         (3 - users.size).times { users << User.new }
+      end
+
+      def populate_users!(params, options)
+        User.find_by_email(params["email"]) or User.new
       end
     end
 
