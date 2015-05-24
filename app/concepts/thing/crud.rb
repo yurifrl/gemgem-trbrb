@@ -49,9 +49,7 @@ class Thing < ActiveRecord::Base
 
     def process(params)
       validate(params[:thing]) do |f|
-
         # raise f.users.inspect # NOTE THAT as a debugging technique!
-
         f.save
 
         dispatch :notify_authors!
@@ -80,7 +78,7 @@ class Thing < ActiveRecord::Base
     private
       def skip_user?(fragment, options)
         # don't process if it's getting removed!
-        return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.model.id.to_s == fragment["id"] }.model)
+        return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.id.to_s == fragment["id"] })
 
         # skip when user is an existing one.
         return true if fragment["id"] # happy path. TODO: validate user add only once.
