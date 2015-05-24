@@ -1,5 +1,12 @@
 # TODO: policy: users can only delete authors when they added them? Delete things. (chapt 9)
-# TODO: make :populate_if_empty dynamic (allow instance methods).
+
+# EXPLAIN validation/table lock etc. later
+# split up files (update goes to separate.) split up contract?
+# form: presentation logic for form. (use cell?)
+# talk about this? http://stackoverflow.com/questions/4116415/preselect-check-box-with-rails-simple-form
+
+# how does skipping work: Form.new[user, user2], then validate with [user, user2:skip,user], user2 will still be there but not updated.
+#   save => users = [user] (without deleted), removes user from collection.
 class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
     include CRUD, Dispatch
@@ -12,6 +19,7 @@ class Thing < ActiveRecord::Base
       validates :name, presence: true
       validates :description, length: {in: 4..160}, allow_blank: true
 
+      # TODO: max. 3 users validation.
       collection :users,
           prepopulator:      :prepopulate_users!,
           populate_if_empty: :populate_users!,
@@ -22,6 +30,10 @@ class Thing < ActiveRecord::Base
 
         def readonly? # per form.
           model.persisted?
+        end
+        alias_method :removeable?, :readonly?
+
+        def remove
         end
       end
 
@@ -37,6 +49,9 @@ class Thing < ActiveRecord::Base
 
     def process(params)
       validate(params[:thing]) do |f|
+
+        # raise f.users.inspect # NOTE THAT as a debugging technique!
+
         f.save
 
         dispatch :notify_authors!
@@ -59,11 +74,14 @@ class Thing < ActiveRecord::Base
 
       # DISCUSS: should inherit: true be default?
       collection :users, inherit: true, skip_if: :skip_user? do
-        property :email#, writeable: ->(*args) { raise args.inspect } #
+        property :email
       end
 
     private
       def skip_user?(fragment, options)
+        # don't process if it's getting removed!
+        return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.model.id.to_s == fragment["id"] }.model)
+
         # skip when user is an existing one.
         return true if fragment["id"] # happy path. TODO: validate user add only once.
         # return true if users[index] and users[index].model.persisted?
