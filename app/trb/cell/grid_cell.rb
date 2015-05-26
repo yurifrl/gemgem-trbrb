@@ -12,7 +12,7 @@ module Cell
     end
 
     def classes
-      classes = self.class.classes
+      classes = self.class.classes.clone
       classes << "end" if options[:last] == model
       classes
     end
