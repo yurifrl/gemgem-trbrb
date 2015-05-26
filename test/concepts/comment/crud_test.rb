@@ -34,7 +34,7 @@ class CommentCrudTest < MiniTest::Spec
       )
 
       res.must_equal false
-      operation.errors.messages.must_equal(:thing=>["can't be blank"], :"user.email"=>["can't be blank", "is invalid"] )
+      operation.errors.messages.must_equal(:thing=>["can't be blank"], :"user"=>["can't be blank"] )
     end
 
     it "invalid email, wrong weight" do
