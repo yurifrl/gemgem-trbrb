@@ -3,7 +3,7 @@ class CommentsController < ApplicationController
     @thing = Thing.find(params[:thing_id]) # UI-specific logic!
 
     form Comment::Create
-    # @form.prepopulate!
+    @form.prepopulate!
   end
 
   def create

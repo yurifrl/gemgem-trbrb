@@ -5,7 +5,6 @@ class Comment < ActiveRecord::Base
 
     contract do
       include Reform::Form::ModelReflections
-      reform_2_0!
 
       def self.weights
         {"0" => "Nice!", "1" => "Rubbish!"}
@@ -24,7 +23,7 @@ class Comment < ActiveRecord::Base
       validates :weight, inclusion: { in: weights.keys }
       validates :thing, :user, presence: true
 
-      property :user do
+      property :user, prepopulator: lambda { |options| self.user = User.new } do
         property :email
         validates :email, presence: true, email: true
       end
@@ -47,7 +46,7 @@ class Comment < ActiveRecord::Base
   private
     def setup_model!(params)
       model.thing = Thing.find_by_id(params[:thing_id])
-      model.build_user
+      # model.build_user
     end
   end
 end
