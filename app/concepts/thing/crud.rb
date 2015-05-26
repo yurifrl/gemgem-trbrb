@@ -9,7 +9,7 @@
 #   save => users = [user] (without deleted), removes user from collection.
 class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
-    include CRUD, Dispatch
+    include CRUD#, Dispatch
     model Thing, :create
 
     contract do
@@ -52,20 +52,20 @@ class Thing < ActiveRecord::Base
         # raise f.users.inspect # NOTE THAT as a debugging technique!
         f.save
 
-        dispatch :notify_authors!
+        # dispatch :notify_authors!
       end
     end
 
   private
-    def notify_authors!
-      # TODO: mark new authors and send mails only to those.
-      model.users.collect { |user| NewUserMailer.welcome_email(user) }
-    end
+    # def notify_authors!
+    #   # TODO: mark new authors and send mails only to those.
+    #   model.users.collect { |user| NewUserMailer.welcome_email(user) }
+    # end
   end
 
   class Update < Create
     action :update
-    skip_dispatch :notify_authors!
+    # skip_dispatch :notify_authors!
 
     contract do
       property :name, writeable: false
