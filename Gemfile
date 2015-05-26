@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 ruby "2.1.2"
-gem "rails", "~> 4.1.0"
+gem "rails", "~> 4.2.0"
 gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.0.0"
@@ -20,6 +20,7 @@ group :development do
   gem "rails_layout"
 end
 gem "pg"
+gem "responders"
 
 group :development, :test do
   gem "minitest-spec-rails"
@@ -41,8 +42,8 @@ gem "trailblazer", path: "../trailblazer"
 # gem "trailblazer", "0.2.2"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "cells", path: "../cells"
-gem "cells", "4.0.0.beta2"
-gem "cells-haml", git: "https://github.com/trailblazer/cells-haml"
+gem "cells", "4.0.0.beta3"
+gem "cells-haml", "0.0.4"
 gem "kaminari-cells", git: "https://github.com/apotonick/kaminari-cells", branch: "cells-4"
 
 gem "roar", "1.0.0"
