@@ -5,7 +5,6 @@ class Comment < ActiveRecord::Base
 
     contract do
       include Reform::Form::ModelReflections
-      # include Reform::Form::Coercion
       reform_2_0!
 
       def self.weights
@@ -28,6 +27,10 @@ class Comment < ActiveRecord::Base
       property :user do
         property :email
         validates :email, presence: true, email: true
+      end
+
+      def weight
+        super or "0"
       end
     end
 
