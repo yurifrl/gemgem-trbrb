@@ -16,20 +16,18 @@ class Comment < ActiveRecord::Base
 
 
       property :body
-      property :weight
+      property :weight, prepopulator: lambda { |*| self.weight= "0" }
       property :thing
 
       validates :body, length: { in: 6..160 }
       validates :weight, inclusion: { in: weights.keys }
       validates :thing, :user, presence: true
 
-      property :user, prepopulator: lambda { |options| self.user = User.new } do
+      property :user,
+          prepopulator:      lambda { |options| self.user = User.new },
+          populate_if_empty: lambda { |*| User.new } do
         property :email
         validates :email, presence: true, email: true
-      end
-
-      def weight
-        super or "0"
       end
     end
 
