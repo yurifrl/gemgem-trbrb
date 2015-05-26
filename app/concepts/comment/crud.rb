@@ -24,7 +24,7 @@ class Comment < ActiveRecord::Base
       validates :thing, :user, presence: true
 
       property :user,
-          prepopulator:      lambda { |options| self.user = User.new },
+          # prepopulator:      lambda { |options| self.user = User.new },
           populate_if_empty: lambda { |*| User.new } do
         property :email
         validates :email, presence: true, email: true
@@ -44,7 +44,7 @@ class Comment < ActiveRecord::Base
   private
     def setup_model!(params)
       model.thing = Thing.find_by_id(params[:thing_id])
-      # model.build_user
+      model.build_user
     end
   end
 end
