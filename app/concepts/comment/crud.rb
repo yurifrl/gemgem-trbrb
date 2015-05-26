@@ -14,6 +14,7 @@ class Comment < ActiveRecord::Base
         [self.class.weights.to_a, :first, :last]
       end
 
+
       property :body
       property :weight, prepopulator: ->(*) { self.weight = "0" }
       property :thing
@@ -22,10 +23,11 @@ class Comment < ActiveRecord::Base
       validates :weight, inclusion: { in: weights.keys }
       validates :thing, :user, presence: true
 
-      require "reform/form/validation/unique_validator.rb"
-      property :user do
+      property :user,
+          prepopulator:      ->(*) { self.user = User.new },
+          populate_if_empty: ->(*) { User.new } do
         property :email
-        validates :email, presence: true, email: true, unique: true
+        validates :email, presence: true, email: true
       end
     end
 
@@ -43,7 +45,6 @@ class Comment < ActiveRecord::Base
   private
     def setup_model!(params)
       model.thing = Thing.find_by_id(params[:id])
-      model.build_user
     end
   end
 end
