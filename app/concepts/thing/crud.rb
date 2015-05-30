@@ -36,6 +36,7 @@ class Thing < ActiveRecord::Base
         def remove
         end
       end
+      validates :users, length: {maximum: 3}
 
     private
       def prepopulate_users!(options)
@@ -49,9 +50,7 @@ class Thing < ActiveRecord::Base
 
     def process(params)
       validate(params[:thing]) do |f|
-        # raise f.users.inspect # NOTE THAT as a debugging technique!
         f.save
-
         # dispatch :notify_authors!
       end
     end

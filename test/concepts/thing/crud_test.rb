@@ -62,8 +62,17 @@ class ThingCrudTest < MiniTest::Spec
       model.users[0].attributes.slice("id", "email").must_equal("id"=>solnic.id, "email"=>"solnic@trb.org") # existing user attached to thing.
       model.users[1].email.must_equal "nick@trb.org" # new user created.
     end
+
+    # too many users
+    it "users > 3" do
+      res, op = Thing::Create.run(thing: {name: "Rails", users: [{"email"=>"nick@trb.org"}, {"email"=>"abdul@trb.org"}, {"email"=>"mike@trb.org"}, {"email"=>"gerd@trb.org"}]})
+
+      res.must_equal false
+      op.errors.to_s.must_equal "{:users=>[\"is too long (maximum is 3 characters)\"]}"
+    end
   end
 
+  # TODO: test "remove"!
   describe "Update" do
     let (:thing) { Thing::Create[thing: {name: "Rails", description: "Kickass web dev", "users"=>[{"email"=>"solnic@trb.org"}]}].model }
 
