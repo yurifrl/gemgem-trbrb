@@ -11,12 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205010716) do
+ActiveRecord::Schema.define(version: 20150530054738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "comments", force: true do |t|
+  create_table "authorships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "thing_id"
+    t.integer  "confirmed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "comments", force: :cascade do |t|
     t.text     "body"
     t.integer  "weight"
     t.integer  "deleted"
@@ -26,14 +34,14 @@ ActiveRecord::Schema.define(version: 20150205010716) do
     t.datetime "updated_at"
   end
 
-  create_table "endorsements", force: true do |t|
+  create_table "endorsements", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "thing_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "things", force: true do |t|
+  create_table "things", force: :cascade do |t|
     t.text     "name"
     t.text     "description"
     t.text     "image_meta_data"
@@ -41,15 +49,15 @@ ActiveRecord::Schema.define(version: 20150205010716) do
     t.datetime "updated_at"
   end
 
-  create_table "things_users", id: false, force: true do |t|
+  create_table "things_users", id: false, force: :cascade do |t|
     t.integer "thing_id", null: false
     t.integer "user_id",  null: false
   end
 
-  create_table "users", force: true do |t|
-    t.string   "email"
-    t.string   "password_digest"
-    t.string   "confirmation_token"
+  create_table "users", force: :cascade do |t|
+    t.string   "email",              limit: 255
+    t.string   "password_digest",    limit: 255
+    t.string   "confirmation_token", limit: 255
     t.text     "image_meta_data"
     t.datetime "created_at"
     t.datetime "updated_at"

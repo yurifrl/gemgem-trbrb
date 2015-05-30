@@ -52,6 +52,14 @@ class ThingCrudTest < MiniTest::Spec
       form.users[2].email.must_equal nil # this comes from prepopulate!
     end
 
+    # all emails blank
+    it "all emails blank" do
+      res, op = Thing::Create.run(thing: {name: "Rails", users: [{"email"=>""}]})
+
+      res.must_equal true
+      op.model.users.must_equal []
+    end
+
     it "valid, new and existing email" do
       solnic = User.create(email: "solnic@trb.org") # TODO: replace with operation, once we got one.
       User.count.must_equal 1
@@ -61,6 +69,9 @@ class ThingCrudTest < MiniTest::Spec
       model.users.size.must_equal 2
       model.users[0].attributes.slice("id", "email").must_equal("id"=>solnic.id, "email"=>"solnic@trb.org") # existing user attached to thing.
       model.users[1].email.must_equal "nick@trb.org" # new user created.
+
+      # authorship is not confirmed, yet.
+      model.authorships.pluck(:confirmed).must_equal [0, 0]
     end
 
     # too many users
@@ -69,6 +80,15 @@ class ThingCrudTest < MiniTest::Spec
 
       res.must_equal false
       op.errors.to_s.must_equal "{:users=>[\"is too long (maximum is 3 characters)\"]}"
+    end
+
+    # author has more than 5 unconfirmed authorships.
+    it do
+      5.times { |i| Thing::Create.(thing: {name: "Rails #{i}", users: [{"email"=>"nick@trb.org"}]}) }
+      res, op = Thing::Create.run(thing: {name: "Rails", users: [{"email"=>"nick@trb.org"}]})
+
+      res.must_equal false
+      op.errors.to_s.must_equal "{:\"users.user\"=>[\"This user has too many unconfirmed authorships.\"]}"
     end
   end
 

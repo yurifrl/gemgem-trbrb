@@ -19,7 +19,6 @@ class Thing < ActiveRecord::Base
       validates :name, presence: true
       validates :description, length: {in: 4..160}, allow_blank: true
 
-      # TODO: max. 3 users validation.
       collection :users,
           prepopulator:      :prepopulate_users!,
           populate_if_empty: :populate_users!,
@@ -27,6 +26,7 @@ class Thing < ActiveRecord::Base
 
         property :email
         validates :email, presence: true, email: true
+        validate :authorship_limit_reached?
 
         def readonly? # per form.
           model.persisted?
@@ -34,6 +34,12 @@ class Thing < ActiveRecord::Base
         alias_method :removeable?, :readonly?
 
         def remove
+        end
+
+      private
+        def authorship_limit_reached?
+          return if model.authorships.find_all { |au| au.confirmed == 0 }.size < 5
+          errors.add("user", "This user has too many unconfirmed authorships.")
         end
       end
       validates :users, length: {maximum: 3}
@@ -52,6 +58,8 @@ class Thing < ActiveRecord::Base
       validate(params[:thing]) do |f|
         f.save
         # dispatch :notify_authors!
+
+        reset_authorships!
       end
     end
 
@@ -60,6 +68,10 @@ class Thing < ActiveRecord::Base
     #   # TODO: mark new authors and send mails only to those.
     #   model.users.collect { |user| NewUserMailer.welcome_email(user) }
     # end
+
+    def reset_authorships!
+      model.authorships.each { |authorship| authorship.update_attribute(:confirmed, 0) }
+    end
   end
 
   class Update < Create
