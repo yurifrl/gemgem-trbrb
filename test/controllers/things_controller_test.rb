@@ -1,6 +1,9 @@
 require 'test_helper'
 
 describe ThingsController do
+  # TODO: add that to minitest-spec-rails?
+  let (:page) { response.body }
+
   # let (:thing) { Thing::Create[thing: {name: "Trailblazer"}].model }
   let (:thing) do
     thing = Thing::Create[thing: {name: "Rails"}].model
@@ -17,8 +20,11 @@ describe ThingsController do
     it "#new [HTML]" do
       # TODO: please make Capybara matchers work with this!
       get :new
-      assert_select "form #thing_name"
-      assert_select "form #thing_name.readonly", false
+
+      # response.must_have_content('Title')
+
+      page.must_have_css "form #thing_name"
+      page.wont_have_css "form #thing_name.readonly"
     end
   end
 
@@ -30,14 +36,14 @@ describe ThingsController do
 
     it do # invalid.
       post :create, {thing: {name: ""}}
-      assert_select ".error"
+      page.must_have_css ".error"
     end
   end
 
   describe "#edit" do
     it do
       get :edit, id: thing.id
-      assert_select "form #thing_name.readonly[value='Rails']"
+      page.must_have_css "form #thing_name.readonly[value='Rails']"
     end
   end
 
@@ -50,7 +56,7 @@ describe ThingsController do
 
     it do
       put :update, id: thing.id, thing: {description: "bla"}
-      assert_select ".error"
+      page.must_have_css ".error"
     end
   end
 
@@ -60,11 +66,11 @@ describe ThingsController do
       response.body.must_match /Rails/
 
        # the form. this assures the model_name is properly set.
-      assert_select "input.button[value=?]", "Create Comment"
+      page.must_have_css "input.button[value=\"Create Comment\"]"
       # make sure the user form is displayed.
-      assert_select ".comment_user_email"
+      page.must_have_css ".comment_user_email"
       # comments must be there.
-      assert_select ".comments .comment"
+      page.must_have_css ".comments .comment"
     end
   end
 
@@ -72,8 +78,8 @@ describe ThingsController do
     it "invalid" do
       post :create_comment, id: thing.id,
         comment: {body: "invalid!"}
-
-      assert_select ".comment_user_email.error"
+puts @response.body
+      page.must_have_css ".comment_user_email.error"
     end
 
     it do
