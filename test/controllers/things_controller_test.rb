@@ -18,13 +18,13 @@ describe ThingsController do
 
   describe "#new" do
     it "#new [HTML]" do
-      # TODO: please make Capybara matchers work with this!
       get :new
-
-      # response.must_have_content('Title')
 
       page.must_have_css "form #thing_name"
       page.wont_have_css "form #thing_name.readonly"
+
+      # 3 author email fields
+      page.must_have_css("input.email", count: 3) # TODO: how can i say "no value"?
     end
   end
 
@@ -37,6 +37,9 @@ describe ThingsController do
     it do # invalid.
       post :create, {thing: {name: ""}}
       page.must_have_css ".error"
+
+      # 3 author email fields
+      page.must_have_css("input.email", count: 3)
     end
   end
 
