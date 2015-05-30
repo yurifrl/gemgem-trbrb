@@ -76,7 +76,8 @@ class ThingCrudTest < MiniTest::Spec
 
     # too many users
     it "users > 3" do
-      res, op = Thing::Create.run(thing: {name: "Rails", users: [{"email"=>"nick@trb.org"}, {"email"=>"abdul@trb.org"}, {"email"=>"mike@trb.org"}, {"email"=>"gerd@trb.org"}]})
+      emails = 4.times.collect { |i| {"email"=>"#{i}@trb.org"} }
+      res, op = Thing::Create.run(thing: {name: "Rails", users: emails})
 
       res.must_equal false
       op.errors.to_s.must_equal "{:users=>[\"is too long (maximum is 3 characters)\"]}"
