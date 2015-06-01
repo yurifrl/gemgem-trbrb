@@ -91,6 +91,14 @@ class ThingCrudTest < MiniTest::Spec
       res.must_equal false
       op.errors.to_s.must_equal "{:\"users.user\"=>[\"This user has too many unconfirmed authorships.\"]}"
     end
+
+    # hack: try to change emails.
+    it "ficken" do
+      op = Thing::Create.(thing: {name: "Rails  ", users: [{"email"=>"nick@trb.org"}]})
+
+      op = Thing::Update.(id: op.model.id, thing: {users: [{"email"=>"wrong@nerd.com"}]})
+      op.model.users[0].email.must_equal "nick@trb.org"
+    end
   end
 
   # TODO: test "remove"!
