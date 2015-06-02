@@ -49,7 +49,14 @@ describe ThingsController do
 
       get :edit, id: thing.id
       page.must_have_css "form #thing_name.readonly[value='Rails']"
+      # existing email is readonly.
       page.must_have_css ".email.readonly[value='joe@trb.org']"
+      # remove button for existing.
+      page.must_have_css "#thing_users_attributes_0_remove"
+      # empty email for new.
+      page.must_have_css "#thing_users_attributes_1_email"
+      # no remove for new.
+      page.wont_have_css "#thing_users_attributes_1_remove"
     end
   end
 
