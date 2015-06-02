@@ -83,7 +83,11 @@ class Thing < ActiveRecord::Base
 
       # DISCUSS: should inherit: true be default?
       collection :users, inherit: true, skip_if: :skip_user? do
-        property :email, skip_if: lambda { |*| model.persisted? }
+        property :email, skip_if: :skip_email?
+
+        def skip_email?(fragment, options)
+          model.persisted?
+        end
       end
 
     private

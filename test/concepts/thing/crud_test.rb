@@ -91,14 +91,6 @@ class ThingCrudTest < MiniTest::Spec
       res.must_equal false
       op.errors.to_s.must_equal "{:\"users.user\"=>[\"This user has too many unconfirmed authorships.\"]}"
     end
-
-    # hack: try to change emails.
-    it "ficken" do
-      op = Thing::Create.(thing: {name: "Rails  ", users: [{"email"=>"nick@trb.org"}]})
-
-      op = Thing::Update.(id: op.model.id, thing: {users: [{"email"=>"wrong@nerd.com"}]})
-      op.model.users[0].email.must_equal "nick@trb.org"
-    end
   end
 
   # TODO: test "remove"!
@@ -134,6 +126,36 @@ class ThingCrudTest < MiniTest::Spec
       model.users[0].attributes.slice("id", "email").must_equal("id"=>solnic.id, "email"=>"solnic@trb.org") # existing user, nothing changed.
       model.users[1].email.must_equal "nick@trb.org" # new user created.
       model.users[1].persisted?.must_equal true
+    end
+
+    # hack: try to change emails.
+    it "doesn't allow changing existing email" do
+      op = Thing::Create.(thing: {name: "Rails  ", users: [{"email"=>"nick@trb.org"}]})
+
+      op = Thing::Update.(id: op.model.id, thing: {users: [{"email"=>"wrong@nerd.com"}]})
+      op.model.users[0].email.must_equal "nick@trb.org"
+    end
+
+    # all emails blank
+    it "all emails blank" do
+      op = Thing::Create.(thing: {name: "Rails  ", users: []})
+
+      res, op = Thing::Update.run(id: op.model.id, thing: {name: "Rails", users: [{"email"=>""},{"email"=>""}]})
+
+      res.must_equal true
+      op.model.users.must_equal []
+    end
+
+    # remove
+    it "allows removing" do
+      op  = Thing::Create.(thing: {name: "Rails  ", users: [{"email"=>"joe@trb.org"}]})
+      joe = op.model.users[0]
+
+      res, op = Thing::Update.run(id: op.model.id, thing: {name: "Rails", users: [{"id"=>joe.id.to_s, "remove"=>"1"}]})
+
+      res.must_equal true
+      op.model.users.must_equal []
+      joe.persisted?.must_equal true
     end
   end
 end
