@@ -45,8 +45,11 @@ describe ThingsController do
 
   describe "#edit" do
     it do
+      thing = Thing::Create[thing: {"name" => "Rails", "users" => [{"email" => "joe@trb.org"}]}].model
+
       get :edit, id: thing.id
       page.must_have_css "form #thing_name.readonly[value='Rails']"
+      page.must_have_css ".email.readonly[value='joe@trb.org']"
     end
   end
 
