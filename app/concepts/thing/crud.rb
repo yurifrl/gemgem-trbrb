@@ -92,7 +92,6 @@ class Thing < ActiveRecord::Base
         return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.id.to_s == fragment["id"] })
 
         # skip when user is an existing one.
-        return true if fragment["id"] # happy path. TODO: validate user add only once.
         # return true if users[index] and users[index].model.persisted?
 
         # replicate skip_if: :all_blank logic.
