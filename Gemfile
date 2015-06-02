@@ -31,10 +31,10 @@ group :production do
   gem "rails_12factor"
 end
 
-# gem "reform", github: "apotonick/reform", branch: "reform-2"
-gem "reform", path: "../reform"
-gem "disposable", path: "../disposable"
-# gem "disposable", github: "apotonick/disposable"
+gem "reform", github: "apotonick/reform", branch: "reform-2"
+# gem "reform", path: "../reform"
+# gem "disposable", path: "../disposable"
+gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
@@ -43,7 +43,7 @@ gem "virtus"
 # gem "cells", git: "https://github.com/apotonick/cells"
 gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
-gem "cells", "4.0.0.beta4"
+gem "cells", "4.0.0.beta5"
 gem "cells-haml", "0.0.5"
 gem "kaminari-cells", git: "https://github.com/apotonick/kaminari-cells", branch: "cells-4"
 
