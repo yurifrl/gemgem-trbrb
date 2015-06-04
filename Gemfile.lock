@@ -1,4 +1,22 @@
 GIT
+  remote: https://github.com/apotonick/kaminari-cells
+  revision: 793376eee18f6bf904a2db6627b7ec1e6d4a00b8
+  branch: cells-4
+  specs:
+    kaminari-cells (0.0.3)
+      cells (>= 4.0.0.alpha1, <= 5.0.0)
+      kaminari (>= 0.16.0)
+
+GIT
+  remote: git://github.com/apotonick/trailblazer.git
+  revision: 0b2b152e6d61f407f56f8c866190e47c66117726
+  specs:
+    trailblazer (0.2.2)
+      actionpack (>= 3.0.0)
+      reform (>= 1.2.0)
+      uber (>= 0.0.10)
+
+GIT
   remote: git://github.com/apotonick/disposable.git
   revision: 9c40c75cda555da92124cecc022e8d40938f3a2f
   specs:
@@ -16,24 +34,6 @@ GIT
       disposable (~> 0.0.8)
       representable (>= 2.2.2)
       uber (~> 0.0.11)
-
-GIT
-  remote: git://github.com/apotonick/trailblazer.git
-  revision: 0b2b152e6d61f407f56f8c866190e47c66117726
-  specs:
-    trailblazer (0.2.2)
-      actionpack (>= 3.0.0)
-      reform (>= 1.2.0)
-      uber (>= 0.0.10)
-
-GIT
-  remote: https://github.com/apotonick/kaminari-cells
-  revision: 793376eee18f6bf904a2db6627b7ec1e6d4a00b8
-  branch: cells-4
-  specs:
-    kaminari-cells (0.0.3)
-      cells (>= 4.0.0.alpha1, <= 5.0.0)
-      kaminari (>= 0.16.0)
 
 GEM
   remote: https://rubygems.org/
@@ -90,12 +90,12 @@ GEM
     capybara_minitest_spec (1.0.5)
       capybara (>= 2)
       minitest (>= 4)
-    cells (4.0.0.beta5)
+    cells (4.0.0.beta6)
       disposable (~> 0.0.8)
       tilt (>= 1.4, < 3)
       uber (~> 0.0.9)
-    cells-haml (0.0.5)
-      cells (~> 4.0.0.beta3)
+    cells-haml (0.0.6)
+      cells (~> 4.0.0.beta6)
       haml (~> 4.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -265,8 +265,8 @@ PLATFORMS
 DEPENDENCIES
   binding_of_caller
   capybara_minitest_spec
-  cells (= 4.0.0.beta5)
-  cells-haml (= 0.0.5)
+  cells (= 4.0.0.beta6)
+  cells-haml (= 0.0.6)
   coffee-rails (~> 4.0.0)
   disposable!
   email_validator
