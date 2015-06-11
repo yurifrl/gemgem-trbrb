@@ -31,7 +31,6 @@ class Comment < ActiveRecord::Base
       end
     end
 
-    require "active_record/locking/fatalistic"
     def process(params)
       validate(params[:comment]) do |f|
         f.save # save comment and user.
