@@ -25,6 +25,7 @@ private
     include ActionView::Helpers::JavaScriptHelper
 
     def show
+      # paginate(comments)
       # concept( "comment/cell", paginated_options) + paginate(paginated_options[:collection])
       # concept( "comment/cell", paginated_options) + link_to_next_page(paginated_options[:collection], 'Next Page') #paginate(paginated_options[:collection])
       render :grid
