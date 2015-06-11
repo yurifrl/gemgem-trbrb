@@ -1,5 +1,4 @@
 source "https://rubygems.org"
-ruby "2.1.2"
 gem "rails", "~> 4.2.0"
 gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
@@ -15,7 +14,6 @@ gem "thin"
 group :development do
   # gem "better_errors"
   gem "binding_of_caller", :platforms=>[:mri_21]
-  gem "html2haml"
   gem "quiet_assets"
   gem "rails_layout"
 end
@@ -43,9 +41,10 @@ gem "virtus"
 # gem "cells", git: "https://github.com/apotonick/cells"
 gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
-gem "cells", "4.0.0.beta5"
-gem "cells-haml", "0.0.5"
-gem "kaminari-cells", git: "https://github.com/apotonick/kaminari-cells", branch: "cells-4"
+gem "cells", "4.0.0"
+gem "cells-haml", "0.0.8"
+gem "haml", github: "haml/haml", ref: "7c7c169"
+gem "kaminari-cells"
 
 gem "roar", "1.0.0"
 
@@ -53,5 +52,3 @@ gem "rails-timeago"
 gem "email_validator"
 
 gem "foundation-icons-sass-rails"
-
-gem "fatalistic" # Table.lock {}
