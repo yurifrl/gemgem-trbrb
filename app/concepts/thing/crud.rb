@@ -13,6 +13,8 @@ class Thing < ActiveRecord::Base
     model Thing, :create
 
     contract do
+      feature Disposable::Twin::Persisted
+
       property :name
       property :description
 
@@ -59,11 +61,26 @@ class Thing < ActiveRecord::Base
         f.save
         # dispatch :notify_authors!
 
+        require "disposable/twin/callback"
+        Disposable::Twin::Callback::Runner.new(f.users).on_add { |twin| on_add!(twin) }
+
+        # dipatch :notify_authors!
+
         reset_authorships!
       end
     end
 
   private
+    def on_add!(twin)
+      # only one mail: welcome and here's your project, or just "here's another project, dude"
+
+      # reset_authorships!
+      # raise twin.inspect
+      puts "``````````@@@@@dded: #{twin.inspect}"
+    end
+    def on_remove!(twin)
+      puts "``````````@@@@@remove: #{twin.inspect}"
+    end
     # def notify_authors!
     #   # TODO: mark new authors and send mails only to those.
     #   model.users.collect { |user| NewUserMailer.welcome_email(user) }
@@ -89,6 +106,10 @@ class Thing < ActiveRecord::Base
           model.persisted?
         end
       end
+
+
+
+      # Disposable::Twin::Callback::Runner.new(f.users).on_delete { |twin| on_remove!(twin) }
 
     private
       def skip_user?(fragment, options)
