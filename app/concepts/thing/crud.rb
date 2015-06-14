@@ -61,13 +61,35 @@ class Thing < ActiveRecord::Base
         f.save
         # dispatch :notify_authors!
 
-        require "disposable/twin/callback"
-        Disposable::Twin::Callback::Runner.new(f.users).on_add { |twin| on_add!(twin) }
+        # hook << this
+        # hook << that
+        #   where hook is callable.
+        # dispatch....on_add(hook)
+        # or:
+        # f.users.on_add(hook)
 
-        # dipatch :notify_authors!
+        Disposable::Twin::Callback::Dispatch.new(f.users).on_add { |twin| on_add!(twin) }
+
+        # dispatch :notify_authors!
+        dispatch :notify_author! { f.users.on_add { |twin| on_add!(twin) } }
+        dispatch :notify_authors!
+        # nested configuration in "callback" class
+        # on_create :mails
+        #
+        # collection :users do
+        #   on_add :notify_authors
+        #   on_add :recalculate_size
+        # end
+        #
+        # run: callbacks.([:on_add, ..])
+        #   allows removing, changing in inherited code.
 
         reset_authorships!
       end
+    end
+
+    def notify_authors!
+      f.users.on_add { |twin| on_add!(twin) }
     end
 
   private
