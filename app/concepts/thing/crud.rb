@@ -56,62 +56,43 @@ class Thing < ActiveRecord::Base
       end
     end
 
+
+    # declaratively define what happens at an event, for a nested setup.
+    callback do
+      collection :users do
+        on_add :notify_author!
+        on_add :reset_authorship!
+
+        # on_delete :notify_deleted_author! # in Update!
+      end
+
+      property :email, on_change(:rehash_email!)
+      on_update :expire_cache!
+    end
+
+
+
+
     def process(params)
       validate(params[:thing]) do |f|
         f.save
-        # dispatch :notify_authors!
 
-        # hook << this
-        # hook << that
-        #   where hook is callable.
-        # dispatch....on_add(hook)
-        # or:
-        # f.users.on_add(hook)
-
-        Disposable::Twin::Callback::Dispatch.new(f.users).on_add { |twin| on_add!(twin) }
-
-        # dispatch :notify_authors!
-        dispatch :notify_author! { f.users.on_add { |twin| on_add!(twin) } }
-        dispatch :notify_authors!
-        # nested configuration in "callback" class
-        # on_create :mails
-        #
-        # collection :users do
-        #   on_add :notify_authors
-        #   on_add :recalculate_size
-        # end
-        #
-        # run: callbacks.([:on_add, ..])
-        #   allows removing, changing in inherited code.
-
-        reset_authorships!
+        dispatch! # calls default callbacks, on_add, then on_update ?
+        # DISCUSS: should we also support this:
+        # dispatch :notify_author! { f.users.on_add { |twin| on_add!(twin) } }
       end
     end
 
-    def notify_authors!
-      f.users.on_add { |twin| on_add!(twin) }
-    end
-
   private
-    def on_add!(twin)
-      # only one mail: welcome and here's your project, or just "here's another project, dude"
-
-      # reset_authorships!
-      # raise twin.inspect
-      puts "``````````@@@@@dded: #{twin.inspect}"
+    def notify_author!(user)
+      # NewUserMailer.welcome_email(user)
     end
-    def on_remove!(twin)
-      puts "``````````@@@@@remove: #{twin.inspect}"
-    end
-    # def notify_authors!
-    #   # TODO: mark new authors and send mails only to those.
-    #   model.users.collect { |user| NewUserMailer.welcome_email(user) }
-    # end
 
-    def reset_authorships!
-      model.authorships.each { |authorship| authorship.update_attribute(:confirmed, 0) }
+    def reset_authorship!(user)
+      # user.model.authorships.each { |authorship| authorship.update_attribute(:confirmed, 0) }
     end
   end
+
 
   class Update < Create
     action :update
