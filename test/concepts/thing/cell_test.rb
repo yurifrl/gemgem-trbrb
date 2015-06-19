@@ -1,13 +1,14 @@
 require 'test_helper'
 
-class ThingConceptTest < Cell::TestCase
-  # test "show" do
-  #   invoke :show
-  #   assert_select 'p'
-  # end
+class ThingCellTest < Cell::TestCase
+  controller HomeController
 
-  test '' do
-    concept("thing/cell")
+  let (:thing) { Thing::Create.(thing: {name: "Rails", description: "Great!!!"}).model }
+
+  it do
+    html = concept("thing/cell", thing).()
+    html.must_have_selector "a", text: "Rails"
+    html.must_have_content "Great!!!"
   end
 
 end

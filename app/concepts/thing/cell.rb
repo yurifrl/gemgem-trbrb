@@ -1,5 +1,6 @@
 class Thing::Cell < Cell::Concept
   property :name
+  property :description
   property :created_at
 
   include Cell::GridCell
@@ -23,7 +24,6 @@ private
     cache :show do
       CacheVersion.for("thing/cell/grid")
     end
-
 
     def show
       things = Thing.latest
