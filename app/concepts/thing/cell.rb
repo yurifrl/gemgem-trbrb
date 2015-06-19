@@ -21,7 +21,7 @@ private
     include Cell::Caching::Notifications
 
     cache :show do
-      Thing.latest.last.id
+      CacheVersion.for("thing/cell/grid")
     end
 
 
