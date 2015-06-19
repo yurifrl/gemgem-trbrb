@@ -18,6 +18,13 @@ private
 
   # The public helper that collects latest things and renders the grid.
   class Grid < Cell::Concept
+    include Cell::Caching::Notifications
+
+    cache :show do
+      Thing.latest.last.id
+    end
+
+
     def show
       things = Thing.latest
       concept("thing/cell", collection: things, last: things.last)
