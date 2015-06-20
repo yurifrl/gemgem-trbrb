@@ -25,6 +25,7 @@ class Thing < ActiveRecord::Base
           skip_if:           :all_blank do
 
         property :email
+        property :remove, virtual: true
         validates :email, presence: true, email: true
         validate :authorship_limit_reached?
 
@@ -32,9 +33,6 @@ class Thing < ActiveRecord::Base
           model.persisted?
         end
         alias_method :removeable?, :readonly?
-
-        def remove
-        end
 
       private
         def authorship_limit_reached?
