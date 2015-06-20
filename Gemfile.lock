@@ -1,21 +1,26 @@
-GIT
-  remote: git://github.com/apotonick/disposable.git
-  revision: 5513c4a0758858ff8e863994c580a2f98fb31715
+PATH
+  remote: ../disposable
   specs:
     disposable (0.0.9)
       representable (>= 2.2.1, <= 2.3.0)
       uber
 
-GIT
-  remote: git://github.com/apotonick/reform.git
-  revision: 70c02d1743f3da9ca9c9db4904df9c1ca057b8da
-  branch: reform-2
+PATH
+  remote: ../reform
   specs:
     reform (1.2.6)
       activemodel
       disposable (~> 0.0.8)
       representable (>= 2.2.2)
       uber (~> 0.0.11)
+
+GIT
+  remote: git://github.com/haml/haml.git
+  revision: 7c7c16930b7fefd6dd9869a3af73f8d86c673b77
+  ref: 7c7c169
+  specs:
+    haml (4.1.0.beta.1)
+      tilt
 
 GIT
   remote: git://github.com/apotonick/trailblazer.git
@@ -25,14 +30,6 @@ GIT
       actionpack (>= 3.0.0)
       reform (>= 1.2.0)
       uber (>= 0.0.10)
-
-GIT
-  remote: git://github.com/haml/haml.git
-  revision: 7c7c16930b7fefd6dd9869a3af73f8d86c673b77
-  ref: 7c7c169
-  specs:
-    haml (4.1.0.beta.1)
-      tilt
 
 GEM
   remote: https://rubygems.org/
