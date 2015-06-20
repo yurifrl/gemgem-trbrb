@@ -27,6 +27,8 @@ class Thing < ActiveRecord::Base
           skip_if:           :all_blank do
 
         property :email
+        property :remove, virtual: true
+
         validates :email, presence: true, email: true
         validate :authorship_limit_reached?
 
@@ -34,9 +36,6 @@ class Thing < ActiveRecord::Base
           model.persisted?
         end
         alias_method :removeable?, :readonly?
-
-        def remove
-        end
 
       private
         def authorship_limit_reached?
@@ -57,6 +56,13 @@ class Thing < ActiveRecord::Base
     end
 
 
+    def self.callback(*)
+
+    end
+    def dispatch!(*)
+      expire_cache!(model)
+    end
+
     # declaratively define what happens at an event, for a nested setup.
     callback do
       collection :users do
@@ -67,6 +73,8 @@ class Thing < ActiveRecord::Base
       end
 
       property :email, on_change(:rehash_email!)
+
+      on_create :expire_cache! # on_change
       on_update :expire_cache!
     end
 
@@ -90,6 +98,12 @@ class Thing < ActiveRecord::Base
 
     def reset_authorship!(user)
       # user.model.authorships.each { |authorship| authorship.update_attribute(:confirmed, 0) }
+    end
+
+    def expire_cache!(thing)
+      CacheVersion.for("thing/cell/grid").expire! # of course, this is only temporary as it
+      # 1. binds Op to view.
+      # 2. expires cache even if thing is not part of that screen.
     end
   end
 
