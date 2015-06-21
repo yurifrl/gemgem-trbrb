@@ -26,6 +26,8 @@ class ThingCrudTest < MiniTest::Spec
       res.must_equal false
       op.errors.to_s.must_equal "{:name=>[\"can't be blank\"]}"
       op.model.persisted?.must_equal false
+
+      op.invocations[:default].must_equal nil
     end
 
     it "invalid description" do
@@ -64,7 +66,8 @@ class ThingCrudTest < MiniTest::Spec
       solnic = User.create(email: "solnic@trb.org") # TODO: replace with operation, once we got one.
       User.count.must_equal 1
 
-      model = Thing::Create.(thing: {name: "Rails", users: [{"email"=>"solnic@trb.org"}, {"email"=>"nick@trb.org"}]}).model
+      op    = Thing::Create.(thing: {name: "Rails", users: [{"email"=>"solnic@trb.org"}, {"email"=>"nick@trb.org"}]})
+      model = op.model
 
       model.users.size.must_equal 2
       model.users[0].attributes.slice("id", "email").must_equal("id"=>solnic.id, "email"=>"solnic@trb.org") # existing user attached to thing.
@@ -72,6 +75,8 @@ class ThingCrudTest < MiniTest::Spec
 
       # authorship is not confirmed, yet.
       model.authorships.pluck(:confirmed).must_equal [0, 0]
+
+      op.invocations[:default].invocations[0].must_equal [:on_add, :notify_author!, [op.contract.users[0], op.contract.users[1]]]
     end
 
     # too many users

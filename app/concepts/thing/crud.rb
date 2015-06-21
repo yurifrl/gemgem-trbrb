@@ -65,7 +65,14 @@ class Thing < ActiveRecord::Base
     end
     require "disposable/twin/callback"
     def dispatch!(name=:default)
-      self.class.callbacks[name].new(contract).(context: self)
+      group = self.class.callbacks[name].new(contract)
+      group.(context: self)
+
+      invocations[name] = group
+    end
+
+    def invocations
+      @invocations ||= {}
     end
 
     # declaratively define what happens at an event, for a nested setup.
@@ -77,10 +84,10 @@ class Thing < ActiveRecord::Base
         # on_delete :notify_deleted_author! # in Update!
       end
 
-      on_change :rehash_email!, property: :email
+      # on_change :rehash_email!, property: :email
 
       on_create :expire_cache! # on_change
-      on_update :expire_cache!
+      # on_update :expire_cache!
     end
 
   # private
@@ -102,9 +109,7 @@ class Thing < ActiveRecord::Base
       validate(params[:thing]) do |f|
         f.save
 
-        dispatch! # calls default callbacks, on_add, then on_update ?
-        # DISCUSS: should we also support this:
-        # dispatch :notify_author! { f.users.on_add { |twin| on_add!(twin) } }
+        dispatch!
       end
     end
 
