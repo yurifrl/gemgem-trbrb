@@ -56,11 +56,16 @@ class Thing < ActiveRecord::Base
     end
 
 
-    def self.callback(*)
+    inheritable_attr :callbacks
+    self.callbacks = {}
 
+    def self.callback(name=:default, *args, &block)
+      callbacks[name] = Class.new(Disposable::Twin::Callback::Group)
+      callbacks[name].class_eval(&block)
     end
-    def dispatch!(*)
-      expire_cache!(model)
+    require "disposable/twin/callback"
+    def dispatch!(name=:default)
+      self.class.callbacks[name].new(contract).(context: self)
     end
 
     # declaratively define what happens at an event, for a nested setup.
@@ -72,14 +77,26 @@ class Thing < ActiveRecord::Base
         # on_delete :notify_deleted_author! # in Update!
       end
 
-      property :email, on_change(:rehash_email!)
+      on_change :rehash_email!, property: :email
 
       on_create :expire_cache! # on_change
       on_update :expire_cache!
     end
 
+  # private
+    def notify_author!(user)
+      # NewUserMailer.welcome_email(user)
+    end
 
+    def reset_authorship!(user)
+      user.model.authorships.find_by(thing_id: model.id).update_attribute(:confirmed, 0)
+    end
 
+    def expire_cache!(thing)
+      CacheVersion.for("thing/cell/grid").expire! # of course, this is only temporary as it
+      # 1. binds Op to view.
+      # 2. expires cache even if thing is not part of that screen.
+    end
 
     def process(params)
       validate(params[:thing]) do |f|
@@ -91,20 +108,6 @@ class Thing < ActiveRecord::Base
       end
     end
 
-  private
-    def notify_author!(user)
-      # NewUserMailer.welcome_email(user)
-    end
-
-    def reset_authorship!(user)
-      # user.model.authorships.each { |authorship| authorship.update_attribute(:confirmed, 0) }
-    end
-
-    def expire_cache!(thing)
-      CacheVersion.for("thing/cell/grid").expire! # of course, this is only temporary as it
-      # 1. binds Op to view.
-      # 2. expires cache even if thing is not part of that screen.
-    end
   end
 
 
