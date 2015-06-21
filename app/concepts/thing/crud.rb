@@ -18,6 +18,14 @@ class Thing < ActiveRecord::Base
       property :name
       property :description
 
+      property :file, virtual: true
+      property :image, virtual: true
+      property :image_meta_data # FIXME.
+
+      include Paperdragon::Model
+      processable :image
+
+
       validates :name, presence: true
       validates :description, length: {in: 4..160}, allow_blank: true
 
@@ -107,6 +115,13 @@ class Thing < ActiveRecord::Base
 
     def process(params)
       validate(params[:thing]) do |f|
+
+        # raise f.image.inspect
+        f.image(f.file) do |v|
+          v.process!(:original)
+          v.process!(:thumb)   { |job| job.thumb!("120x120#") }
+        end
+
         f.save
 
         dispatch!
