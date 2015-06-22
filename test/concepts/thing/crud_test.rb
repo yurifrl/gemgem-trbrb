@@ -20,6 +20,14 @@ class ThingCrudTest < MiniTest::Spec
       thing.description.must_equal "Kickass web dev"
     end
 
+    # valid file upload.
+    it "valid upload" do
+      thing = Thing::Create[thing: {name: "Rails",
+        file: Pathname.new("test/images/cells.jpg")}].model
+
+      thing.image[:thumb].url.must_equal "/images/thumb-cells.jpg"
+    end
+
     it "invalid" do
       res, op = Thing::Create.run(thing: {name: ""})
 
