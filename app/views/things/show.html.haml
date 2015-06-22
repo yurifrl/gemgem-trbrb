@@ -1,6 +1,6 @@
 .header
   %h1
-    = image_tag @thing.image[:thumb].url if @thing.image.exists?
+    = image_tag @thing.image[:thumb].url, class: :th if @thing.image.exists?
 
     #{@thing.name}
     = link_to "Edit", edit_thing_path(@thing)
