@@ -22,10 +22,19 @@ class ThingCrudTest < MiniTest::Spec
 
     # valid file upload.
     it "valid upload" do
-      thing = Thing::Create[thing: {name: "Rails",
-        file: Pathname.new("test/images/cells.jpg")}].model
+      thing = Thing::Create.(thing: {name: "Rails",
+        file: File.open("test/images/cells.jpg")}).model
 
       thing.image[:thumb].url.must_equal "/images/thumb-cells.jpg"
+    end
+
+    # invalid file upload.
+    it "invalid upload" do
+      res, op = Thing::Create.run(thing: {name: "Rails",
+        file: File.open("test/images/hack.pdf")})
+
+      res.must_equal false
+      op.errors.to_s.must_equal "{:file=>[\"file has an extension that does not match its contents\", \"file should be one of image/jpeg, image/png\"]}"
     end
 
     it "invalid" do

@@ -47,6 +47,7 @@ gem "haml", github: "haml/haml", ref: "7c7c169"
 gem "kaminari-cells"
 
 gem "paperdragon"
+gem "file_validators"
 gem "roar", "1.0.0"
 
 gem "rails-timeago"

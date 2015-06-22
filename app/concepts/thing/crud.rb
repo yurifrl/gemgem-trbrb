@@ -24,6 +24,8 @@ class Thing < ActiveRecord::Base
 
       include Paperdragon::Model
       processable :image
+      validates :file, file_size: { less_than: 1.megabyte },
+        file_content_type: { allow: ['image/jpeg', 'image/png'] }
 
 
       validates :name, presence: true
