@@ -119,16 +119,16 @@ class Thing < ActiveRecord::Base
 
     def upload_image!(thing)
               # raise f.image.inspect
-        contract.image(contract.file) do |v|
-          v.process!(:original)
-          v.process!(:thumb)   { |job| job.thumb!("120x120#") }
-        end
+      contract.image(contract.file) do |v|
+        v.process!(:original)
+        v.process!(:thumb)   { |job| job.thumb!("120x120#") }
+      end
     end
 
     def process(params)
       validate(params[:thing]) do |f|
-
-        dispatch!(:upload)
+        upload_image!(f) if f.changed?(:file)
+        # dispatch!(:upload)
 
         f.save
 
