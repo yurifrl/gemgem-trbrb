@@ -19,8 +19,7 @@ class Thing < ActiveRecord::Base
       property :description
 
       property :file, virtual: true
-      property :image, virtual: true
-      property :image_meta_data # FIXME.
+      property :image_meta_data, deserializer: {writeable: false} # FIXME.
 
       include Paperdragon::Model
       processable :image

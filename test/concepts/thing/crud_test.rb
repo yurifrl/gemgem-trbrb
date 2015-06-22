@@ -28,6 +28,12 @@ class ThingCrudTest < MiniTest::Spec
       thing.image[:thumb].url.must_equal "/images/thumb-cells.jpg"
     end
 
+    it "hack" do
+      thing = Thing::Create.(thing: {name: "Rails",
+        image_meta_data: {bla: 1}}).model
+      thing.image_meta_data.must_equal nil
+    end
+
     # invalid file upload.
     it "invalid upload" do
       res, op = Thing::Create.run(thing: {name: "Rails",
