@@ -25,7 +25,7 @@ class ThingCrudTest < MiniTest::Spec
       thing = Thing::Create.(thing: {name: "Rails",
         file: File.open("test/images/cells.jpg")}).model
 
-      thing.image[:thumb].url.must_equal "/images/thumb-cells.jpg"
+      Paperdragon::Attachment.new(thing.image_meta_data).exists?.must_equal true
     end
 
     it "hack" do

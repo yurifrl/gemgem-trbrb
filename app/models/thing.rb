@@ -5,8 +5,5 @@ class Thing < ActiveRecord::Base
 
   scope :latest, lambda { all.limit(9).order("id DESC") }
 
-
-  include Paperdragon::Model
-  processable :image # this is only for image[:thumb], move to twin.
   serialize :image_meta_data
 end

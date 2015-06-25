@@ -21,8 +21,8 @@ class Thing < ActiveRecord::Base
       property :file, virtual: true
       property :image_meta_data, deserializer: {writeable: false} # FIXME.
 
-      include Paperdragon::Model
-      processable :image
+      extend Paperdragon::Model::Writer
+      processable_writer :image
       validates :file, file_size: { less_than: 1.megabyte },
         file_content_type: { allow: ['image/jpeg', 'image/png'] }
 
@@ -69,10 +69,10 @@ class Thing < ActiveRecord::Base
     self.callbacks = {}
 
     def self.callback(name=:default, *args, &block)
-      callbacks[name] = Class.new(Disposable::Twin::Callback::Group)
+      callbacks[name] = Class.new(Disposable::Callback::Group)
       callbacks[name].class_eval(&block)
     end
-    require "disposable/twin/callback"
+    require "disposable/callback"
     def dispatch!(name=:default)
       group = self.class.callbacks[name].new(contract)
       group.(context: self)
@@ -120,7 +120,7 @@ class Thing < ActiveRecord::Base
 
     def upload_image!(thing)
               # raise f.image.inspect
-      contract.image(contract.file) do |v|
+      contract.image!(contract.file) do |v|
         v.process!(:original)
         v.process!(:thumb)   { |job| job.thumb!("120x120#") }
       end

@@ -1,6 +1,6 @@
 .header
   %h1
-    = image_tag @thing.image[:thumb].url, class: :th if @thing.image.exists?
+    = concept("thing/cell/decorator", @thing).(:thumb)
 
     #{@thing.name}
     = link_to "Edit", edit_thing_path(@thing)
