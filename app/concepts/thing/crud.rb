@@ -97,10 +97,7 @@ class Thing < ActiveRecord::Base
         # on_delete :notify_deleted_author! # in Update!
       end
 
-      # on_change :rehash_email!, property: :email
-
-      on_create :expire_cache! # on_change
-      # on_update :expire_cache!
+      on_change :expire_cache!
     end
 
   # private
