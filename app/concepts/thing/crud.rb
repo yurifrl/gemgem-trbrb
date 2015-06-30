@@ -65,25 +65,7 @@ class Thing < ActiveRecord::Base
     end
 
 
-    inheritable_attr :callbacks
-    self.callbacks = {}
-
-    def self.callback(name=:default, *args, &block)
-      callbacks[name] = Class.new(Disposable::Callback::Group)
-      callbacks[name].class_eval(&block)
-    end
-    require "disposable/callback"
-    def dispatch!(name=:default)
-      group = self.class.callbacks[name].new(contract)
-      group.(context: self)
-
-      invocations[name] = group
-    end
-
-    def invocations
-      @invocations ||= {}
-    end
-
+    include Dispatch
     callback(:upload) do
       on_change :upload_image!, property: :file
     end
@@ -99,7 +81,7 @@ class Thing < ActiveRecord::Base
 
       # on_change :rehash_email!, property: :email
 
-      on_create :expire_cache! # on_change
+      on_change :expire_cache! # on_change
       # on_update :expire_cache!
     end
 
