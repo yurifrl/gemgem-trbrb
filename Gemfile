@@ -30,16 +30,16 @@ group :production do
 end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
-gem "reform", path: "../reform"
-gem "disposable", path: "../disposable"
+# gem "reform", path: "../reform"
+gem "reform", "2.0.0.beta2"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
 # gem "trailblazer", path: "../trailblazer"
-# gem "trailblazer", "0.2.2"
+gem "trailblazer", "0.3.0"
 # gem "cells", git: "https://github.com/apotonick/cells"
-gem "trailblazer", github: "apotonick/trailblazer"
+# gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
 gem "cells", "4.0.1"
 gem "monban"
