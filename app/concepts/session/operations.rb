@@ -1,5 +1,5 @@
 module Session
-  class Signin < Trailblazer::Operation
+  class SignIn < Trailblazer::Operation
     contract do
       undef :persisted? # TODO: allow with trailblazer/reform.
       attr_reader :user
@@ -42,7 +42,7 @@ module Session
 
 
   require "reform/form/validation/unique_validator.rb"
-  class SignUp < Trailblazer::Operation
+  class SignUp < Trailblazer::Operation # Tyrant::SignUp.
     include CRUD
     model User, :create
 

@@ -2,11 +2,11 @@ require_dependency "session/operations" # TODO: via trailblazer.
 
 class SessionsController < ApplicationController
   def sign_up_form
-    form Session::Signup
+    form Session::SignUp
   end
 
   def sign_up
-    run Session::Signup do |op|
+    run Session::SignUp do |op|
       return redirect_to new_session_path
     end
 
@@ -14,13 +14,13 @@ class SessionsController < ApplicationController
   end
 
   def sign_in_form
-    form Session::Signin
+    form Session::SignIn
   end
 
   # TODO: test me.
   alias_method :sign_in!, :sign_in
   def sign_in
-    run Session::Signin do |op|
+    run Session::SignIn do |op|
       sign_in!(op.model)
       return redirect_to root_path
     end
