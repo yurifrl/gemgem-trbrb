@@ -28,14 +28,15 @@ class SessionsController < ApplicationController
   end
 
   # TODO: test me.
-  def signout
+  alias_method :sign_out!, :sign_out
+  def sign_out
     run Session::Signout do
-      sign_out
-      redirect_to things_path
+      sign_out!
+      redirect_to root_path
     end
   end
 
   def operation_model_name # FIXME.
- "FIXME"
+   "FIXME"
   end
 end
