@@ -31,5 +31,16 @@ class SessionSignInTest < MiniTest::Spec
     op.model.must_equal nil
   end
 
-  # 3x wrong password in 10 mins
+  # empty form.
+  it "xxx" do
+    res, op = Session::SignIn.run(session: {
+      email: "",
+      password: ""
+    })
+
+    res.must_equal false
+  end
+
+  # 3x wrong password in 10 mins.
+  # sign in when already signed in.
 end

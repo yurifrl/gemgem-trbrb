@@ -15,13 +15,12 @@ module Session
         return unless email
         return unless password # TODO: test me.
 
-
         @user = User.find_by_email(email)
-        return errors.add(:password, "Wrong password.") unless user # TODO: test me.
-
+# raise @user.inspect
+        return errors.add(:password, "Wrong password.") unless @user # TODO: test me.
 
         # DISCUSS: move validation of PW to Op#process?
-        errors.add(:password, "Wrong password.") unless Monban.config.authentication_service.new(user, password).perform
+        errors.add(:password, "Wrong password.") unless Monban.config.authentication_service.new(@user, password).perform
       end
     end
 

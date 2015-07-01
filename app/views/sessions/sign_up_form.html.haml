@@ -1,8 +1,11 @@
 %h1 Come join us!
 
 = simple_form_for(@form, url: sessions_sign_up_path) do |f|
-  = f.input :email, placeholder: "Email", label: false
-  = f.input :password, placeholder: "Password", label: false
-  = f.input :confirm_password, placeholder: "Password, again", label: false
-
-  = f.button :submit, "Sign up!", class: :expand
+  .row
+    = f.input :email, placeholder: "Email", label: false
+  .row
+    = f.input :password, placeholder: "Password", label: false
+  .row
+    = f.input :confirm_password, placeholder: "Password, again", label: false
+  .row
+    = f.button :submit, "Sign up!", class: :expand
