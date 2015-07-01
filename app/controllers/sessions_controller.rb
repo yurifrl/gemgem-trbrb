@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
     render action: :sign_up_form
   end
 
-  def new
+  def sign_in_form
     form Session::Signin
   end
 

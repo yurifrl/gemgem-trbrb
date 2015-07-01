@@ -12,6 +12,6 @@ Rails.application.routes.draw do
   post "sessions/sign_up"
   get  "sessions/sign_out"
 
+  get  "sessions/sign_in_form"
   post "sessions/sign_in"
-  resources :sessions
 end
