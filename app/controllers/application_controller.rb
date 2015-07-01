@@ -6,4 +6,6 @@ class ApplicationController < ActionController::Base
   include Trailblazer::Operation::Controller
   require 'trailblazer/operation/controller/active_record'
   include Trailblazer::Operation::Controller::ActiveRecord # named instance variables.
+
+  include Monban::ControllerHelpers
 end

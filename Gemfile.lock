@@ -63,7 +63,7 @@ GEM
     capybara_minitest_spec (1.0.5)
       capybara (>= 2)
       minitest (>= 4)
-    cells (4.0.1)
+    cells (4.0.2)
       tilt (>= 1.4, < 3)
       uber (~> 0.0.9)
     cells-haml (0.0.8)
@@ -86,7 +86,7 @@ GEM
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    disposable (0.1.4)
+    disposable (0.1.5)
       representable (>= 2.2.3, <= 2.3.0)
       uber
     dragonfly (1.0.10)
@@ -138,7 +138,7 @@ GEM
     kaminari-cells (0.0.4)
       cells (>= 4.0.0, <= 5.0.0)
       kaminari (>= 0.16.0)
-    libv8 (3.16.14.9)
+    libv8 (3.16.14.8)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -200,9 +200,9 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
     ref (1.0.5)
-    reform (2.0.0.beta2)
+    reform (2.0.0.rc1)
       activemodel
-      disposable (~> 0.1.4)
+      disposable (~> 0.1.5)
       representable (>= 2.2.2)
       uber (~> 0.0.11)
     representable (2.2.3)
@@ -271,7 +271,7 @@ PLATFORMS
 DEPENDENCIES
   binding_of_caller
   capybara_minitest_spec
-  cells (= 4.0.1)
+  cells (= 4.0.2)
   cells-haml (= 0.0.8)
   coffee-rails (~> 4.0.0)
   email_validator
@@ -292,7 +292,7 @@ DEPENDENCIES
   rails-timeago
   rails_12factor
   rails_layout
-  reform (= 2.0.0.beta2)
+  reform (= 2.0.0.rc1)
   responders
   roar (= 1.0.0)
   sass-rails (~> 4.0.3)

@@ -31,7 +31,7 @@ end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
 # gem "reform", path: "../reform"
-gem "reform", "2.0.0.beta2"
+gem "reform", "2.0.0.rc1"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
@@ -41,7 +41,7 @@ gem "trailblazer", "0.3.0"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
-gem "cells", "4.0.1"
+gem "cells", "4.0.2"
 gem "monban"
 gem "cells-haml", "0.0.8"
 gem "haml", github: "haml/haml", ref: "7c7c169"

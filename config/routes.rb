@@ -8,4 +8,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get  "sessions/sign_up_form"
+  post "sessions/sign_up"
+  get  "sessions/sign_out"
+  resources :sessions
 end
