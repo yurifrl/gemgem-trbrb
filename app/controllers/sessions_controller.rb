@@ -18,9 +18,10 @@ class SessionsController < ApplicationController
   end
 
   # TODO: test me.
-  def create
+  alias_method :sign_in!, :sign_in
+  def sign_in
     run Session::Signin do |op|
-      sign_in(op.user)
+      sign_in!(op.model)
       return redirect_to root_path
     end
 

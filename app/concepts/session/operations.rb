@@ -1,21 +1,14 @@
 module Session
   class Signin < Trailblazer::Operation
     contract do
+      undef :persisted? # TODO: allow with trailblazer/reform.
+      attr_reader :user
+
       property :email,    virtual: true
       property :password, virtual: true
 
       validates :email, :password, presence: true
       validate :password_ok?
-
-      def persisted?
-        false
-      end
-      def to_key
-        nil
-      end
-      model :session
-
-      attr_reader :user
     private
       def password_ok?
         return unless email
@@ -31,15 +24,13 @@ module Session
       end
     end
 
-
     def process(params)
       # model = User.find_by_email(email) 00000> pass user into form?
       validate(params[:session], nil) do |contract|
         # Monban.config.sign_in_service.new(contract.user).perform
-        @user = contract.user
+        @model = contract.user
       end
     end
-    attr_reader :user
   end
 
   class Signout < Trailblazer::Operation
@@ -63,13 +54,6 @@ module Session
       validates :email, :password, :confirm_password, presence: true
       validates :email, email: true, unique: true
       validate :password_ok?
-
-      def persisted?
-        false
-      end
-      def to_key
-        nil
-      end
 
     private
       def password_ok?

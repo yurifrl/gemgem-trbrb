@@ -1,6 +1,6 @@
 %h1 Come in!
 
-= simple_form_for(@form) do |f|
+= simple_form_for(@form, url: sessions_sign_in_path, as: :session) do |f|
   = f.input :email, placeholder: "Email", label: false
   = f.input :password, placeholder: "Password", label: false
 
