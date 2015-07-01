@@ -9,6 +9,7 @@ module Session
 
       validates :email, :password, presence: true
       validate :password_ok?
+
     private
       def password_ok?
         return unless email
@@ -41,7 +42,7 @@ module Session
 
 
   require "reform/form/validation/unique_validator.rb"
-  class Signup < Trailblazer::Operation
+  class SignUp < Trailblazer::Operation
     include CRUD
     model User, :create
 
@@ -56,12 +57,10 @@ module Session
       validate :password_ok?
 
     private
+      # TODO: more, like minimum 6 chars, etc.
       def password_ok?
-        return unless email
-        return unless password # TODO: test me.
-
-        return errors.add(:password, "Passwords don't match") unless password == confirm_password # TODO: test me.
-        # TODO: more, like minimum 6 chars, etc.
+        return unless email and password
+        errors.add(:password, "Passwords don't match") if password != confirm_password
       end
     end
 
