@@ -82,21 +82,44 @@ module Session
     end
 
 
-    class UnconfirmedNoPassword < Trailblazer::Operation
-      include CRUD
-      model User, :create
+    # class UnconfirmedNoPassword < Trailblazer::Operation
+    #   include CRUD
+    #   model User, :create
 
+    #   contract do
+    #     property :email
+    #     validates :email, email: true, unique: true, presence: true
+    #   end
+
+    #   def process(params)
+    #     # TODO: i want the user here!
+    #     validate(params[:user]) do |contract|
+    #       model.auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
+    #       contract.save
+    #     end
+    #   end
+    # end
+
+    class UnconfirmedNoPassword < Trailblazer::Operation
       contract do
         property :email
-        validates :email, email: true, unique: true, presence: true
+        validates :email, email: true#, unique: true, presence: true
       end
 
       def process(params)
-        # TODO: i want the user here!
-        validate(params[:user]) do |contract|
-          model.auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
-          contract.save
-        end
+        # @contract = contract_for(nil, params[:user])
+        # if @contract.validate({}) # DISCUSS: do we need that?
+          params[:user].auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
+        #   @contract.save
+        #   return
+        # end
+        # return invalid!
+
+        # # TODO: i want the user here!
+        # validate(params[:user]) do |contract|
+        #   model.auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
+        #   contract.save
+        # end
       end
     end
   end

@@ -33,3 +33,7 @@ Trailblazer::Operation::CRUD.module_eval do
   end
   extend Included # override CRUD::included.
 end
+
+Trailblazer::Operation.class_eval do
+  include Trailblazer::Operation::Dispatch
+end

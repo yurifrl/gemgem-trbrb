@@ -5,6 +5,7 @@ class Comment < ActiveRecord::Base
 
     contract do
       include Reform::Form::ModelReflections
+      feature Disposable::Twin::Persisted
 
       def self.weights
         {"0" => "Nice!", "1" => "Rubbish!"}
@@ -31,8 +32,13 @@ class Comment < ActiveRecord::Base
       end
     end
 
+    callback do
+      on_change :sign_up_unconfirmed!, property: :user
+    end
+
     def process(params)
       validate(params[:comment]) do |f|
+        dispatch!
         f.save # save comment and user.
       end
     end
@@ -44,6 +50,23 @@ class Comment < ActiveRecord::Base
   private
     def setup_model!(params)
       model.thing = Thing.find_by_id(params[:id])
+    end
+
+    require_dependency "session/operations"
+    def sign_up_unconfirmed!(comment)
+      Session::SignUp::UnconfirmedNoPassword.(user: comment.user.model)
+    end
+
+
+    class SignedIn < Create
+      contract do
+        property :user # TODO: allow to remove.
+        validates :user, presence: :true
+      end
+
+      def sign_up_unconfirmed!(comment)
+        # TODO: allow to skip.
+      end
     end
   end
 end

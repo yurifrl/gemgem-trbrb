@@ -4,7 +4,7 @@ class CommentCrudTest < MiniTest::Spec
   let (:thing) { Thing::Create[thing: {name: "Ruby"}].model }
 
   describe "Create" do
-    it "persists valid" do
+    it "persists validxxx" do
       res, op = Comment::Create.run(
         comment: {
           body:   "Fantastic!",
@@ -21,6 +21,9 @@ class CommentCrudTest < MiniTest::Spec
 
       comment.user.persisted?.must_equal true
       comment.user.email.must_equal "jonny@trb.org"
+      # unconfirmed signup.
+      # TODO: this shouldn't be tested like that here, but use tyrant's public API.
+      comment.user.auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
 
       op.thing.must_equal thing
     end
@@ -106,4 +109,32 @@ class CommentCrudTest < MiniTest::Spec
 
   #   Rating.find(rating.id).deleted.must_equal 1
   # end
+
+  class CommentSignedInTest < MiniTest::Spec
+    let (:thing) { Thing::Create[thing: {name: "Ruby"}].model }
+    let (:user) { User.create(email: "liza@trb.org") } # TODO: operation.
+
+    # valid
+    it do
+      res, op = Comment::Create::SignedIn.run(
+        comment: {
+          body:   "Fantastic!",
+          weight: "1",
+          user:   user
+        },
+        id: thing.id
+      )
+      res.must_equal true
+
+      comment = op.model
+
+      comment.persisted?.must_equal true
+      comment.body.must_equal "Fantastic!"
+      comment.weight.must_equal 1
+
+      comment.user.must_equal user
+      comment.thing.must_equal thing
+      user.auth_meta_data.must_equal nil # TODO: this is how i test that callback hasn't been run, currently.
+    end
+  end
 end
