@@ -67,6 +67,10 @@ class Comment < ActiveRecord::Base
       def sign_up_unconfirmed!(comment)
         # TODO: allow to skip.
       end
+
+      def setup_params!(params)
+        params[:comment][:user] = params[:current_user] # TODO: how do we handle missing [:comment]?
+      end
     end
   end
 end

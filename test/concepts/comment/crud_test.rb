@@ -119,10 +119,10 @@ class CommentCrudTest < MiniTest::Spec
       res, op = Comment::Create::SignedIn.run(
         comment: {
           body:   "Fantastic!",
-          weight: "1",
-          user:   user
+          weight: "1"
         },
-        id: thing.id
+        id: thing.id,
+        current_user: user
       )
       res.must_equal true
 
