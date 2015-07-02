@@ -14,6 +14,7 @@ class SessionsController < ApplicationController
     render action: :sign_up_form
   end
 
+  # before_filter should be used when op not involved at all.
   def sign_in_form
     form Session::SignIn
   end
@@ -26,7 +27,7 @@ class SessionsController < ApplicationController
       return redirect_to root_path
     end
 
-    render action: :new
+    render action: :sign_in_form
   end
 
   # TODO: test me.
