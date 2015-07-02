@@ -1,7 +1,6 @@
 require 'test_helper'
 
-require "minitest/rails/capybara"
-class SessionsControllerTest < Capybara::Rails::TestCase
+class SessionsControllerTest < IntegrationTest
   it do
     visit "sessions/sign_up_form"
 
@@ -66,16 +65,8 @@ class SessionsControllerTest < Capybara::Rails::TestCase
     page.must_have_content "Welcome to Gemgem!"
   end
 
-  def submit!(email, password)
-    within("//form[@id='new_session']") do
-      fill_in 'Email',    with: email
-      fill_in 'Password', with: password
-    end
-    click_button "Sign in!"
-  end
 
-
-    def submit_sign_up!(email, password, confirm)
+  def submit_sign_up!(email, password, confirm)
     within("//form[@id='new_user']") do
       fill_in 'Email',    with: email
       fill_in 'Password', with: password
