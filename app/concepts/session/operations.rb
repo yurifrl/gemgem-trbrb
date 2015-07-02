@@ -64,6 +64,11 @@ module Session
     end
 
 
+    # sucessful signup:
+    # * hash password, set confirmed
+    # * hash password, set unconfirmed with token etc.
+
+    # * no password, unconfirmed, needs password.
     def process(params)
       validate(params[:user]) do |contract|
         # form.email, form.password
@@ -73,6 +78,25 @@ module Session
           # Monban.config.sign_up_service.new(email: "foo@example.com", password: "password").perform
           #Monban.config.sign_up_service.new(hash).perform
         # end
+      end
+    end
+
+
+    class UnconfirmedNoPassword < Trailblazer::Operation
+      include CRUD
+      model User, :create
+
+      contract do
+        property :email
+        validates :email, email: true, unique: true, presence: true
+      end
+
+      def process(params)
+        # TODO: i want the user here!
+        validate(params[:user]) do |contract|
+          model.auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
+          contract.save
+        end
       end
     end
   end

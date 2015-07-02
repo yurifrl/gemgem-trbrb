@@ -58,3 +58,23 @@ class SessionSignUpTest < MiniTest::Spec
     op.errors.to_s.must_equal "{:email=>[\"email must be unique.\"]}"
   end
 end
+
+
+# this happens when you add a NEW user to a thing.
+class SessionSignUpUnconfirmedNeedsPasswordTest < MiniTest::Spec
+  it do
+    User.new
+
+    res, op = Session::SignUp::UnconfirmedNoPassword.run(user: {email: "selectport@trb.org" })
+
+    res.must_equal true
+
+    user = op.model
+    user.email.must_equal "selectport@trb.org"
+    user.password_digest.must_equal nil
+
+    user.auth_meta_data[:confirmation_token].must_equal "asdfasdfasfasfasdfasdf"
+    user.auth_meta_data[:confirmation_created_at].must_equal "assddsf"
+
+  end
+end
