@@ -2,15 +2,6 @@ require 'test_helper'
 
 require "minitest/rails/capybara"
 class SessionsControllerTest < Capybara::Rails::TestCase
-  include Capybara::DSL
-  # include Capybara::Assertions
-
-  # let (:page) { response.body }
-
-  let (:user) do
-
-  end
-
   it do
     visit "sessions/sign_up_form"
 
@@ -66,7 +57,12 @@ class SessionsControllerTest < Capybara::Rails::TestCase
 
     page.must_have_content "Hi, fred@trb.org" # login success.
 
+    # no sign_in screen for logged in.
     visit "/sessions/sign_in_form"
+    page.must_have_content "Welcome to Gemgem!"
+
+    # no sign_up screen for logged in.
+    visit "/sessions/sign_up_form"
     page.must_have_content "Welcome to Gemgem!"
   end
 
