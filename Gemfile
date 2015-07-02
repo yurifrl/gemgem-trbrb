@@ -22,7 +22,7 @@ gem "responders"
 
 group :development, :test do
   gem "minitest-spec-rails"
-  # gem "minitest-rails-capybara"
+  gem "minitest-rails-capybara"
   gem "capybara_minitest_spec"
 end
 group :production do

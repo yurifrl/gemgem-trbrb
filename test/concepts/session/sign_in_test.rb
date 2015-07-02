@@ -32,7 +32,7 @@ class SessionSignInTest < MiniTest::Spec
   end
 
   # empty form.
-  it "xxx" do
+  it do
     res, op = Session::SignIn.run(session: {
       email: "",
       password: ""
