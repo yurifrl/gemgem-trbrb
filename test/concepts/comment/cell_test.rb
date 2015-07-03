@@ -1,9 +1,6 @@
 require 'test_helper'
 
-class CommentCellTest < MiniTest::Spec
-  include Cell::Testing
-# Cell::Testing.capybara = true
-
+class CommentCellTest < Cell::TestCase
   controller ThingsController
 
   let (:thing) do

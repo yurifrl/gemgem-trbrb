@@ -22,8 +22,12 @@ gem "responders"
 
 group :development, :test do
   # gem "minitest-spec-rails" # this gave use "controller specs, with #get, etc."
+  # installs:
+  # minitest
+  #
+  #
   gem "minitest-rails-capybara" # needed for IntegrationTest, but doesn't work with something else. (minitest-capybara is the problem)
-  gem "capybara_minitest_spec"
+  # gem "capybara_minitest_spec"
 end
 group :production do
   gem "rails_12factor"

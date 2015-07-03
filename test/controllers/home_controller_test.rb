@@ -1,6 +1,5 @@
 require 'test_helper'
 
-require "minitest/rails/capybara"
 class HomeIntegrationTest < Capybara::Rails::TestCase
   it do
     Thing.delete_all

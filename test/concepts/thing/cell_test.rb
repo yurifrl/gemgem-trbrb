@@ -1,7 +1,6 @@
 require 'test_helper'
 
-class ThingCellTest < MiniTest::Spec
-  include Cell::Testing
+class ThingCellTest < Cell::TestCase
   controller HomeController
 
   let (:thing) { Thing::Create.(thing: {name: "Rails", description: "Great!!!"}).model }
