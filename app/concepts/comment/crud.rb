@@ -1,5 +1,10 @@
 class Comment < ActiveRecord::Base
   class Create < Trailblazer::Operation
+    builds -> (params) do
+      SignedIn if params[:current_user]
+    end
+
+
     include CRUD
     model Comment, :create
 
@@ -69,7 +74,8 @@ class Comment < ActiveRecord::Base
       end
 
       def setup_params!(params)
-        params[:comment][:user] = params[:current_user] # TODO: how do we handle missing [:comment]?
+          # FIXME: this is also called in Op#form context. find a better way for "params handling".
+        params[:comment][:user] = params[:current_user] if params[:comment]# TODO: how do we handle missing [:comment]?
       end
     end
   end

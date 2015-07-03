@@ -17,6 +17,7 @@ end
 # this is otherwise done in Cell::TestCase, which is derived from ActiveSupport::TestCase, and sucks.
 Cell::Testing.capybara = true
 
+#NoMethodError: undefined method `assert_selector' for #<ThingCellTest:0xc32a5a8>
 # require "minitest/rails/capybara"
 # class IntegrationTest < Capybara::Rails::TestCase
 #   def sign_in!(*)

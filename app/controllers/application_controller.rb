@@ -7,5 +7,9 @@ class ApplicationController < ActionController::Base
   require 'trailblazer/operation/controller/active_record'
   include Trailblazer::Operation::Controller::ActiveRecord # named instance variables.
 
-  include Monban::ControllerHelpers
+  include Monban::ControllerHelpers # TODO: only use signed_in, and current_user.
+
+  def process_params!(params)
+    params.merge!(current_user: current_user)
+  end
 end
