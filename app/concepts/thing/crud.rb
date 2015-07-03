@@ -9,6 +9,11 @@
 #   save => users = [user] (without deleted), removes user from collection.
 class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
+    builds do |params|
+      SignedIn if params[:current_user]
+    end
+
+
     include CRUD#, Dispatch
     model Thing, :create
 
@@ -66,7 +71,7 @@ class Thing < ActiveRecord::Base
 
 
     include Dispatch
-    callback(:upload) do
+    callback(:before_save) do
       on_change :upload_image!, property: :file
     end
 
@@ -107,12 +112,30 @@ class Thing < ActiveRecord::Base
 
     def process(params)
       validate(params[:thing]) do |f|
-        upload_image!(f) if f.changed?(:file)
-        # dispatch!(:upload)
+        dispatch!(:before_save)
 
         f.save
 
         dispatch!
+      end
+    end
+
+
+    class SignedIn < self
+      contract do
+        property :is_author, virtual: true
+      end
+
+      callback(:before_save) do
+        on_change :add_current_user_as_author!, property: :is_author
+      end
+
+      def add_current_user_as_author!(thing)
+        thing.users << @current_user
+      end
+
+      def setup_params!(params) # TODO: allow passing params to callback.
+        @current_user = params[:current_user]
       end
     end
 

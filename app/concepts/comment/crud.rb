@@ -4,7 +4,6 @@ class Comment < ActiveRecord::Base
       SignedIn if params[:current_user]
     end
 
-
     include CRUD
     model Comment, :create
 

@@ -187,3 +187,30 @@ class ThingCrudTest < MiniTest::Spec
     end
   end
 end
+
+
+class ThingSignedInCrudTest < MiniTest::Spec
+  describe "Create::SignedIn" do
+    let (:current_user) { User.create(email: "solnic@trb.org") } # TODO: replace with operation, once we got one.
+
+    # valid, no flag set.
+    it "xxx"do
+      model  = Thing::Create.(
+        current_user: current_user,
+        thing:        {"name"=>"Rails", "users" => [{"email"=>"nick@trb.org"}]}
+      ).model
+
+      model.users.map { |u| u.email }.must_equal(["nick@trb.org"])
+    end
+
+    # valid, flag set.
+    it "xxx"do
+      model  = Thing::Create.(
+        current_user: current_user,
+        thing:        {"name"=>"Rails", "users" => [{"email"=>"nick@trb.org"}], "is_author"=>"1"}
+      ).model
+
+      model.users.map { |u| u.email }.must_equal(["nick@trb.org", "solnic@trb.org"])
+    end
+  end
+end
