@@ -1,6 +1,9 @@
 require 'test_helper'
 
-class CommentCellTest < Cell::TestCase
+class CommentCellTest < MiniTest::Spec
+  include Cell::Testing
+# Cell::Testing.capybara = true
+
   controller ThingsController
 
   let (:thing) do
@@ -23,6 +26,7 @@ class CommentCellTest < Cell::TestCase
     comments.size.must_equal 3
 
     first = comments[0]
+    puts first.find(".header").class
     first.find(".header").must_have_content "hilz@trb.org"
     first.find(".header time")["datetime"].must_match /\d\d-/
     first.must_have_content "Improving"

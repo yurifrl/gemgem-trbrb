@@ -1,8 +1,32 @@
 require 'test_helper'
 
-describe ThingsController do
+require "minitest/rails/capybara"
+class IntegrationTest < Capybara::Rails::TestCase
+  def sign_in!(*)
+    sign_up! #=> Session::SignUp
+
+    visit "/sessions/sign_in_form"
+
+    submit!(email="fred@trb.org", password="123456")
+  end
+
+  def sign_up!(email="fred@trb.org", password="123456")
+    Session::SignUp::Admin.(user: {email: email, password: password})
+  end
+
+  def submit!(email, password)
+    within("//form[@id='new_session']") do
+      fill_in 'Email',    with: email
+      fill_in 'Password', with: password
+    end
+    click_button "Sign in!"
+  end
+end
+
+
+class ThingsControllerTest < IntegrationTest
   # TODO: add that to minitest-spec-rails?
-  let (:page) { response.body }
+  # let (:page) { response.body }
 
   # let (:thing) { Thing::Create[thing: {name: "Trailblazer"}].model }
   let (:thing) do
@@ -18,7 +42,7 @@ describe ThingsController do
 
   describe "#new" do
     it "#new [HTML]" do
-      get :new
+      visit "/things/new"
 
       page.must_have_css "form #thing_name"
       page.wont_have_css "form #thing_name.readonly"

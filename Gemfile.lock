@@ -160,9 +160,6 @@ GEM
       minitest-capybara (~> 0.7.0)
       minitest-metadata (~> 0.5.0)
       minitest-rails (~> 2.1)
-    minitest-spec-rails (5.2.2)
-      minitest (~> 5.0)
-      rails (~> 4.1)
     monban (0.2.1)
       bcrypt
       rails
@@ -298,7 +295,6 @@ DEPENDENCIES
   jquery-rails
   kaminari-cells
   minitest-rails-capybara
-  minitest-spec-rails
   monban
   paperdragon (>= 0.0.8)
   pg

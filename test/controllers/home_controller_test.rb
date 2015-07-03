@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class IntegrationTest < ActionDispatch::IntegrationTest
+class HomeIntegrationTest < ActionDispatch::IntegrationTest
   it do
     Thing.delete_all
 
