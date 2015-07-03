@@ -103,6 +103,17 @@ class SessionsControllerTest < IntegrationTest
   end
 
 
+  # sign in attempt of unconfirmed-needs-password.
+  it do
+    Thing::Create.(thing: {name: "Taz", users: [{email: "fred@taz.de"}]})
+
+    visit "sessions/sign_in_form"
+    submit! "fred@taz.de", ""
+    page.wont_have_content "Hi, fred@taz.de" # NO login allowed.
+    page.must_have_content "Sign in"
+  end
+
+
   def submit_sign_up!(email, password, confirm)
     within("//form[@id='new_user']") do
       fill_in 'Email',    with: email

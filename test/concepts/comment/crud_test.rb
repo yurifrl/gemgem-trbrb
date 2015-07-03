@@ -4,7 +4,7 @@ class CommentCrudTest < MiniTest::Spec
   let (:thing) { Thing::Create[thing: {name: "Ruby"}].model }
 
   describe "Create" do
-    it "persists validxxx" do
+    it "persists valid" do
       res, op = Comment::Create.run(
         comment: {
           body:   "Fantastic!",

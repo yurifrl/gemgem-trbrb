@@ -23,7 +23,6 @@ class InitialDatabase < ActiveRecord::Migration
     create_table :users do |t|
       t.string :email
       t.string :password_digest
-      t.string :confirmation_token
       t.text   :image_meta_data
 
       t.timestamps

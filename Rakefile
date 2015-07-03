@@ -14,6 +14,12 @@ namespace :test do
     t.verbose = true
   end
 
+  Rake::TestTask.new(:controllers) do |t|
+    t.libs << "test"
+    t.pattern = 'test/controllers/**/*_test.rb'
+    t.verbose = true
+  end
+
 
 end
 

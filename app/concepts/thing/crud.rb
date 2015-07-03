@@ -45,6 +45,7 @@ class Thing < ActiveRecord::Base
 
         validates :email, presence: true, email: true
         validate :authorship_limit_reached?
+        validate :unconfirmed_user_limit_reached?
 
         def readonly? # per form.
           model.persisted?
@@ -56,8 +57,28 @@ class Thing < ActiveRecord::Base
           return if model.authorships.find_all { |au| au.confirmed == 0 }.size < 5
           errors.add("user", "This user has too many unconfirmed authorships.")
         end
+
+        def unconfirmed_user_limit_reached?
+          return
+
+          return unless model.auth_meta_data and model.auth_meta_data[:confirmation_token] # FIXME: this breaks tyrant API. should be Tyrant::User.new(model).confirmed?
+          puts "@@@@@ #{model.inspect}"
+          return if model.authorships.size == 0
+          errors.add("user", "This user is unconfirmed and already assign to another thing.")
+        end
       end
       validates :users, length: {maximum: 3}
+      validate :unconfirmed_users_limit_reached?
+
+      def unconfirmed_users_limit_reached?
+        users.each do |user|
+          next unless user.model.auth_meta_data and user.model.auth_meta_data[:confirmation_token]
+          next unless users.added.include?(user) # this covers Update, and i don't really like it here.
+          next if user.model.authorships.size == 0
+          errors.add("users", "User is unconfirmed and already assign to another thing.")
+        end
+
+      end
 
     private
       def prepopulate_users!(options)
@@ -73,6 +94,9 @@ class Thing < ActiveRecord::Base
     include Dispatch
     callback(:before_save) do
       on_change :upload_image!, property: :file
+      collection :users do
+        on_add :sign_up_unconfirmed!
+      end
     end
 
     # declaratively define what happens at an event, for a nested setup.
@@ -108,6 +132,12 @@ class Thing < ActiveRecord::Base
         v.process!(:original)
         v.process!(:thumb)   { |job| job.thumb!("120x120#") }
       end
+    end
+
+    require_dependency "session/operations"
+    def sign_up_unconfirmed!(user)
+      return if user.persisted? # only new
+      Session::SignUp::UnconfirmedNoPassword.(user: user.model)
     end
 
     def process(params)
@@ -155,6 +185,18 @@ class Thing < ActiveRecord::Base
 
         def skip_email?(fragment, options)
           model.persisted?
+        end
+
+        def unconfirmed_user_limit_reached?
+          return
+
+
+
+          return unless model.auth_meta_data and model.auth_meta_data[:confirmation_token] # FIXME: this breaks tyrant API. should be Tyrant::User.new(model).confirmed?
+          puts "@@@@@ #{model.inspect}"
+          # return if model.authorships.size == 0
+          return if model.authorships.size == 1
+          errors.add("user", "This user is unconfirmed and already assign to another thing.")
         end
       end
 

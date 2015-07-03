@@ -85,7 +85,7 @@ class ThingCrudTest < MiniTest::Spec
       op.model.users.must_equal []
     end
 
-    it "valid, new and existing email" do
+    it "valid, new and existing email xxx" do
       solnic = User.create(email: "solnic@trb.org") # TODO: replace with operation, once we got one.
       User.count.must_equal 1
 
@@ -100,6 +100,12 @@ class ThingCrudTest < MiniTest::Spec
       model.authorships.pluck(:confirmed).must_equal [0, 0]
 
       op.invocations[:default].invocations[0].must_equal [:on_add, :notify_author!, [op.contract.users[0], op.contract.users[1]]]
+
+
+      # unconfirmed signup.
+      # TODO: this shouldn't be tested like that here, but use tyrant's public API.
+      model.users[0].auth_meta_data.must_equal(nil) # existing user doesn't need unconfirmed signup.
+      model.users[1].auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
     end
 
     # too many users
@@ -113,11 +119,21 @@ class ThingCrudTest < MiniTest::Spec
 
     # author has more than 5 unconfirmed authorships.
     it do
+      # Session::SignUp.(session: {email: "nick@trb.org"})
+      User.create(email: "nick@trb.org") # this is "confirmed".
+
       5.times { |i| Thing::Create.(thing: {name: "Rails #{i}", users: [{"email"=>"nick@trb.org"}]}) }
       res, op = Thing::Create.run(thing: {name: "Rails", users: [{"email"=>"nick@trb.org"}]})
 
       res.must_equal false
       op.errors.to_s.must_equal "{:\"users.user\"=>[\"This user has too many unconfirmed authorships.\"]}"
+    end
+
+    # author is unconfirmed-needs-password and can only be added to one thing.
+    it "zz" do
+      Thing::Create.(thing: {name: "Rails", users: [{"email"=>"nick@trb.org"}]}) # nick@trb.org is unsignedup
+      res, op = Thing::Create.run(thing: {name: "Trb", users: [{"email"=>"nick@trb.org"}]})
+      res.must_equal false
     end
   end
 

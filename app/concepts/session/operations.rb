@@ -12,11 +12,10 @@ module Session
 
     private
       def password_ok?
-        return unless email
-        return unless password # TODO: test me.
+        return if email.blank?
+        return if password.blank? # TODO: test me.
 
         @user = User.find_by_email(email)
-# raise @user.inspect
         return errors.add(:password, "Wrong password.") unless @user # TODO: test me.
 
         # DISCUSS: move validation of PW to Op#process?
