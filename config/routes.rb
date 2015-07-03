@@ -14,4 +14,6 @@ Rails.application.routes.draw do
 
   get  "sessions/sign_in_form"
   post "sessions/sign_in"
+
+  resources :users
 end
