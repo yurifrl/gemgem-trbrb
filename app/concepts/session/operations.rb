@@ -134,4 +134,56 @@ module Session
       end
     end
   end
+
+  class ChangePassword < Trailblazer::Operation
+    include CRUD
+    model User, :find
+
+    # TODO: copy from SignUp and remove email.
+    contract do
+      property :password, virtual: true
+      property :confirm_password, virtual: true
+      property :password_digest#, deserializer: { writeable: false }
+
+      validates :password, :confirm_password, presence: true
+      validate :password_ok?
+
+    private
+      # TODO: more, like minimum 6 chars, etc.
+      def password_ok?
+        return unless password and confirm_password
+        errors.add(:password, "Passwords don't match") if password != confirm_password
+      end
+    end
+
+    # TODO: inherit from SignUp/share with module.
+    def process(params)
+      @requires_old = params[:requires_old]
+
+      validate(params[:user]) do
+        contract.password_digest = Monban.hash_token(contract.password)
+        contract.save# do |hash|
+      end
+    end
+  end
+
+
+  class Authenticatable < Disposable::Twin
+      property :auth_meta_data
+
+      def confirmable?
+        # TODO: add expiry etc.
+        return false unless auth_meta_data # FIXME: use Struct.
+        auth_meta_data[:confirmation_token].size > 0
+      end
+    end
+
+    class IsConfirmable < Trailblazer::Operation
+      include CRUD # TODO: implement with twin.
+      model User, :find
+
+      def process(params)
+
+      end
+    end
 end

@@ -63,13 +63,13 @@ end
 # this happens when you add a NEW user to a thing.
 class SessionSignUpUnconfirmedNeedsPasswordTest < MiniTest::Spec
   it do
-    User.new
+    user = User.new( {email: "selectport@trb.org" })
 
-    res, op = Session::SignUp::UnconfirmedNoPassword.run(user: {email: "selectport@trb.org" })
+    res, op = Session::SignUp::UnconfirmedNoPassword.run(user: user)
 
     res.must_equal true
 
-    user = op.model
+    # user = op.model
     user.email.must_equal "selectport@trb.org"
     user.password_digest.must_equal nil
 
