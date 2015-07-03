@@ -55,6 +55,8 @@ class ThingsController  < ApplicationController
     render action: :new
   end
 
+
+  protect_from_forgery except: :next_comments # FIXME: this is only required in the test, things_controller_test.
   def next_comments
     present Thing::Update
 
