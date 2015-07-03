@@ -25,10 +25,6 @@ end
 
 
 class ThingsControllerTest < IntegrationTest
-  # TODO: add that to minitest-spec-rails?
-  # let (:page) { response.body }
-
-  # let (:thing) { Thing::Create[thing: {name: "Trailblazer"}].model }
   let (:thing) do
     thing = Thing::Create[thing: {name: "Rails"}].model
 

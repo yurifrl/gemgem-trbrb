@@ -44,5 +44,11 @@ class CommentsControllerIntegrationTest < IntegrationTest
     # correct page.
     page.must_have_content "Lotus"
     page.wont_have_css "#comment_user_attributes_email"
+
+    fill_in "Your comment", with: "Tired of Rails"
+    click_button "Create Comment"
+
+    page.must_have_content "Created comment"
+    page.must_have_css ".comment", text: "Tired of Rails"
   end
 end
