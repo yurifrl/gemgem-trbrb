@@ -88,6 +88,20 @@ class SessionsControllerTest < IntegrationTest
     page.must_have_content "Welcome to Gemgem!"
   end
 
+  # sign_out.
+  it do
+    visit "sessions/sign_out"
+    page.current_path.must_equal "/"
+    page.wont_have_content "Hi, fred@trb.org" # login success.
+
+    sign_in!
+    page.must_have_content "Hi, fred@trb.org" # login success.
+
+    click_link "Sign out"
+    page.current_path.must_equal "/"
+    page.wont_have_content "Hi, fred@trb.org" # login success.
+  end
+
 
   def submit_sign_up!(email, password, confirm)
     within("//form[@id='new_user']") do
