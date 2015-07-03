@@ -45,7 +45,6 @@ class Thing < ActiveRecord::Base
 
         validates :email, presence: true, email: true
         validate :authorship_limit_reached?
-        validate :unconfirmed_user_limit_reached?
 
         def readonly? # per form.
           model.persisted?
@@ -56,15 +55,6 @@ class Thing < ActiveRecord::Base
         def authorship_limit_reached?
           return if model.authorships.find_all { |au| au.confirmed == 0 }.size < 5
           errors.add("user", "This user has too many unconfirmed authorships.")
-        end
-
-        def unconfirmed_user_limit_reached?
-          return
-
-          return unless model.auth_meta_data and model.auth_meta_data[:confirmation_token] # FIXME: this breaks tyrant API. should be Tyrant::User.new(model).confirmed?
-          puts "@@@@@ #{model.inspect}"
-          return if model.authorships.size == 0
-          errors.add("user", "This user is unconfirmed and already assign to another thing.")
         end
       end
       validates :users, length: {maximum: 3}
@@ -186,21 +176,7 @@ class Thing < ActiveRecord::Base
         def skip_email?(fragment, options)
           model.persisted?
         end
-
-        def unconfirmed_user_limit_reached?
-          return
-
-
-
-          return unless model.auth_meta_data and model.auth_meta_data[:confirmation_token] # FIXME: this breaks tyrant API. should be Tyrant::User.new(model).confirmed?
-          puts "@@@@@ #{model.inspect}"
-          # return if model.authorships.size == 0
-          return if model.authorships.size == 1
-          errors.add("user", "This user is unconfirmed and already assign to another thing.")
-        end
       end
-
-
 
       # Disposable::Twin::Callback::Runner.new(f.users).on_delete { |twin| on_remove!(twin) }
 
