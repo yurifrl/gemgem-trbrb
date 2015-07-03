@@ -1,15 +1,16 @@
 require 'test_helper'
 
-class HomeIntegrationTest < ActionDispatch::IntegrationTest
+require "minitest/rails/capybara"
+class HomeIntegrationTest < Capybara::Rails::TestCase
   it do
     Thing.delete_all
 
     Thing::Create[thing: {name: "Trailblazer"}]
     Thing::Create[thing: {name: "Descendents"}]
 
-    get "/"
+    visit "/"
 
-    assert_select ".columns .header a", "Descendents" # TODO: test not-end.
-    assert_select ".columns.end .header a", "Trailblazer"
+    page.must_have_css ".columns .header a", text: "Descendents" # TODO: test not-end.
+    page.must_have_css ".columns.end .header a", text: "Trailblazer"
   end
 end

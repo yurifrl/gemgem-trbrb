@@ -32,10 +32,10 @@ class ThingsControllerTest < IntegrationTest
   let (:thing) do
     thing = Thing::Create[thing: {name: "Rails"}].model
 
-    Comment::Create[comment: {body: "Excellent", weight: "0", user: {email: "zavan@trb.org"}}, id: thing.id]
-    Comment::Create[comment: {body: "!Well.", weight: "1", user: {email: "jonny@trb.org"}}, id: thing.id]
-    Comment::Create[comment: {body: "Cool stuff!", weight: "0", user: {email: "chris@trb.org"}}, id: thing.id]
-    Comment::Create[comment: {body: "Improving.", weight: "1", user: {email: "hilz@trb.org"}}, id: thing.id]
+    Comment::Create.(comment: {body: "Excellent", weight: "0", user: {email: "zavan@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "!Well.", weight: "1", user: {email: "jonny@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "Cool stuff!", weight: "0", user: {email: "chris@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "Improving.", weight: "1", user: {email: "hilz@trb.org"}}, id: thing.id)
 
     thing
   end
@@ -54,12 +54,21 @@ class ThingsControllerTest < IntegrationTest
 
   describe "#create" do
     it do
-      post :create, {thing: {name: "Bad Religion"}}
-      assert_redirected_to thing_path(Thing.last)
+      visit "/things/new"
+      fill_in 'Name', with: "Bad Religion"
+      click_button "Create Thing"
+
+      page.current_path.must_equal thing_path(Thing.last)
     end
 
+    # TODO: better DSL for #post, etc.
+
     it do # invalid.
-      post :create, {thing: {name: ""}}
+      # post :create, {thing: {name: ""}}
+      visit "/things/new"
+      fill_in 'Name', with: ""
+      click_button "Create Thing"
+
       page.must_have_css ".error"
 
       # 3 author email fields
@@ -71,7 +80,8 @@ class ThingsControllerTest < IntegrationTest
     it do
       thing = Thing::Create[thing: {"name" => "Rails", "users" => [{"email" => "joe@trb.org"}]}].model
 
-      get :edit, id: thing.id
+      visit "/things/#{thing.id}/edit"
+
       page.must_have_css "form #thing_name.readonly[value='Rails']"
       # existing email is readonly.
       page.must_have_css "#thing_users_attributes_0_email.readonly[value='joe@trb.org']"
@@ -86,21 +96,32 @@ class ThingsControllerTest < IntegrationTest
 
   describe "#update" do
     it do
-      put :update, id: thing.id, thing: {name: "Trb"}
-      assert_redirected_to thing_path(thing)
-      # assert_select "h1", "Trb"
+      # put :update, id: thing.id, thing: {name: "Trb"}
+      visit edit_thing_path(thing.id)
+      fill_in 'Description', with: "Primitive MVC"
+      click_button "Update Thing"
+
+      # assert_redirected_to thing_path(thing)
+      page.current_path.must_equal thing_path(thing.id)
+      page.must_have_css "h1", text: "Rails"
+      page.must_have_content "Primitive MVC"
     end
 
     it do
-      put :update, id: thing.id, thing: {description: "bla"}
+      # put :update, id: thing.id, thing: {description: "bla"}
+      visit edit_thing_path(thing.id)
+      fill_in 'Description', with: "bla"
+      click_button "Update Thing"
+
       page.must_have_css ".error"
     end
   end
 
   describe "#show" do
     it do
-      get :show, id: thing.id
-      response.body.must_match /Rails/
+      visit thing_path(thing.id)
+
+      page.must_have_content "Rails"
 
        # the form. this assures the model_name is properly set.
       page.must_have_css "input.button[value=\"Create Comment\"]"
@@ -113,26 +134,36 @@ class ThingsControllerTest < IntegrationTest
 
   describe "#create_comment" do
     it "invalid" do
-      post :create_comment, id: thing.id,
-        comment: {body: "invalid!"}
-puts @response.body
+      # post :create_comment, id: thing.id, comment: {body: "invalid!"}
+      visit thing_path(thing.id)
+      fill_in 'Your comment', with: "invalid!"
+      click_button "Create Comment"
+
       page.must_have_css ".comment_user_email.error"
     end
 
     it do
-      post :create_comment, id: thing.id,
-        comment: {body: "That green jacket!", weight: "1", user: {email: "seuros@trb.org"}}
+      # post :create_comment, id: thing.id, comment: {body: "That green jacket!", weight: "1", user: {email: "seuros@trb.org"}}
+      visit thing_path(thing.id)
+      fill_in 'Your comment', with: "That green jacket!"
+      choose "Rubbish!"
+      fill_in "Your Email", with: "seuros@trb.org"
+      click_button "Create Comment"
 
-      assert_redirected_to thing_path(thing)
-      flash[:notice].must_equal "Created comment for \"Rails\""
+      # assert_redirected_to thing_path(thing)
+      page.current_path.must_equal thing_path(thing)
+      # flash[:notice].must_equal "Created comment for \"Rails\""
+      page.must_have_css ".alert-box", text: "Created comment for \"Rails\""
     end
   end
 
   describe "#next_comments" do
     it do
-      xhr :get, :next_comments, id: thing.id, page: 2
+      visit thing_path(thing.id)
+      # xhr :get, :next_comments, id: thing.id, page: 2
+      click_link "More!"
 
-      response.body.must_match /zavan@trb.org/
+      page.must_have_content /zavan@trb.org/
     end
   end
 end
