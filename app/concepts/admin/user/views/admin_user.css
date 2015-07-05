@@ -1,3 +1,5 @@
 .unconfirmed {
-  color: #808080;
+  background-color: #808080;
+  color: #efefef;
+  padding: 6px;
 }
