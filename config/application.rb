@@ -23,6 +23,7 @@ module RailsFoundation
     # For Foundation 5
     config.assets.precompile += %w( vendor/modernizr )
 
+    config.cells.with_assets = %w( admin/user/cell )
   end
 end
 

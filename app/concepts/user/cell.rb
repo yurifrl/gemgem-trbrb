@@ -11,13 +11,18 @@ private
   end
 
   def right
-    authorships
+    authorship_links
   end
 
-  def authorships
+  def authorship_links
     return unless model.authorships.size > 0
 
     "(#{model.authorships.count}) " +
-     model.authorships.map { |as| link_to as.thing.name, thing_path(as.thing) }.join(", ")
+     model.authorships.map { |as| thing_link(as) }.compact.join(", ")
+  end
+
+  def thing_link(authorship)
+    return unless authorship.confirmed == 1
+    link_to authorship.thing.name, thing_path(authorship.thing)
   end
 end
