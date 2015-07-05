@@ -25,6 +25,9 @@ class SessionConfirmTest < MiniTest::Spec
   it do
     user = User.create(email: "raff@trb.org")
     Session::SignUp::UnconfirmedNoPassword.(user: user)
+    user.save
+
+    user.reload
 
 
     op = Session::ChangePassword.(requires_old: false, id: user.id, user: {password: "123", confirm_password: "123"})

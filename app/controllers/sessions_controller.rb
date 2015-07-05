@@ -40,6 +40,24 @@ class SessionsController < ApplicationController
     end
   end
 
+
+  # TODO: should be in one Op.
+  # we could also provide 2 different steps: via before filter OR validate token in form?
+  before_filter only: [:activate_form] { res, op=Session::IsConfirmable.run(params); res ? "" : redirect_to( root_path) }
+  def activate_form
+    form Session::ChangePassword # TODO: require_original: true
+  end
+
+  def activate
+    run Session::ChangePassword do
+      flash[:notice] = "Password changed."
+       redirect_to sessions_sign_in_form_path # TODO: user profile.
+       return
+    end # TODO: require_original: true
+
+    render :activate_form
+  end
+
   def operation_model_name # FIXME.
    "FIXME"
   end

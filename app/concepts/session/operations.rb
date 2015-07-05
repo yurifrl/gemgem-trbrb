@@ -148,6 +148,10 @@ module Session
       validates :password, :confirm_password, presence: true
       validate :password_ok?
 
+
+      # TODO: separate form class:
+      property :confirmation_token, virtual: true
+
     private
       # TODO: more, like minimum 6 chars, etc.
       def password_ok?
@@ -156,12 +160,21 @@ module Session
       end
     end
 
+    attr_reader :confirmation_token
+    def setup_params!(params)
+      @confirmation_token = params[:confirmation_token] # FIXME: separate class!
+      # contract.confirmation_token = @confirmation_token
+    end
     # TODO: inherit from SignUp/share with module.
     def process(params)
       @requires_old = params[:requires_old]
 
       validate(params[:user]) do
         contract.password_digest = Monban.hash_token(contract.password)
+        # TODO: do with tyrant API.
+        # raise model.inspect
+        model.auth_meta_data[:confirmation_token]=nil
+        # model.auth_meta_data[:confirmation_token]=nil
         contract.save# do |hash|
       end
     end
@@ -169,21 +182,27 @@ module Session
 
 
   class Authenticatable < Disposable::Twin
-      property :auth_meta_data
+    property :auth_meta_data
 
-      def confirmable?
-        # TODO: add expiry etc.
-        return false unless auth_meta_data # FIXME: use Struct.
-        auth_meta_data[:confirmation_token].size > 0
-      end
+    def confirmable?(token=nil)
+      # TODO: add expiry etc.
+      return false unless auth_meta_data # FIXME: use Struct.
+      return false unless auth_meta_data[:confirmation_token].size > 0
+      return false if token and token != auth_meta_data[:confirmation_token]
+      true
     end
+  end
 
-    class IsConfirmable < Trailblazer::Operation
-      include CRUD # TODO: implement with twin.
-      model User, :find
 
-      def process(params)
 
-      end
+  # DISCUSS: maybe call ConfirmationTokenIsValid
+  class IsConfirmable < Trailblazer::Operation
+    include CRUD # TODO: implement with twin.
+    model User, :find
+
+    def process(params)
+      token = params[:confirmation_token]
+      return invalid! unless Authenticatable.new(model).confirmable?(token)
     end
+  end
 end
