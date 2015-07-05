@@ -1,5 +1,4 @@
 %h1 That's Us!
 
 %ul
-  - @collection.each do |user|
-    = h user.inspect
+  = concept(@cell, collection: @collection)

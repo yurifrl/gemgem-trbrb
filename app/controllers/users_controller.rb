@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   def index
     collection User::Index
 
-    render text: concept("user/cell/grid", @collection).(:grid), layout: true
+    @cell = "user/cell"
+    @cell = "admin/user/cell" if params[:admin]
   end
 end
