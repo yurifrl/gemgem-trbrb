@@ -24,7 +24,8 @@ group :development, :test do
   # gem "minitest-spec-rails" # this gave use "controller specs, with #get, etc."
   # installs:
   # minitest
-  #
+  # capybara
+  # minitest-rails
   #
   gem "minitest-rails-capybara" # needed for IntegrationTest, but doesn't work with something else. (minitest-capybara is the problem)
   # gem "capybara_minitest_spec"
@@ -40,8 +41,8 @@ gem "reform", "2.0.0.rc1"
 gem "virtus"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
-# gem "trailblazer", path: "../trailblazer"
-gem "trailblazer", "0.3.0"
+gem "trailblazer", path: "../trailblazer"
+# gem "trailblazer", "0.3.0"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"

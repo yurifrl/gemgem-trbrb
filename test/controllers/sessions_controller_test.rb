@@ -119,7 +119,7 @@ class SessionsControllerTest < IntegrationTest
 
     page.must_have_content "Hi, fred@taz.de"   # signed in.
 
-
+    # TODO: password mismatch, missing confirmation_token, and so on.
 
     # # empty
     # submit_sign_up!("", "", "")

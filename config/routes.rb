@@ -19,4 +19,8 @@ Rails.application.routes.draw do
   post "sessions/activate/:id", controller: :sessions, action: :activate, as: :session_activate
 
   resources :users
+
+  namespace :admin do
+    resources :users
+  end
 end

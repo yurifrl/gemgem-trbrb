@@ -6,6 +6,13 @@ GIT
     haml (4.1.0.beta.1)
       tilt
 
+PATH
+  remote: ../trailblazer
+  specs:
+    trailblazer (0.3.1)
+      reform (>= 1.2.0)
+      uber (>= 0.0.10)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -253,10 +260,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    trailblazer (0.3.0)
-      actionpack (>= 3.0.0)
-      reform (>= 1.2.0)
-      uber (>= 0.0.10)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uber (0.0.13)
@@ -307,7 +310,7 @@ DEPENDENCIES
   spring
   therubyracer
   thin
-  trailblazer (= 0.3.0)
+  trailblazer!
   uglifier (>= 1.3.0)
   virtus
 
