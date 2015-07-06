@@ -11,12 +11,12 @@ class SessionConfirmTest < MiniTest::Spec
   describe "#confirmable?" do
     # TODO: add expiry checks.
     it do
-      Session::Authenticatable.new(user).confirmable?.must_equal true
+      Tyrant::Authenticatable.new(user).confirmable?.must_equal true
     end
 
     it do
       user = Session::SignUp.(user: {email: "selectport@trb.org", password: "123123", confirm_password: "123123"}).model
-      Session::Authenticatable.new(user).confirmable?.must_equal false
+      Tyrant::Authenticatable.new(user).confirmable?.must_equal false
     end
   end
 

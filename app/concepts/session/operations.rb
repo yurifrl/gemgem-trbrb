@@ -181,27 +181,6 @@ module Session
   end
 
 
-  class Authenticatable < Disposable::Twin
-    property :auth_meta_data
-
-    def confirmable?(token=nil)
-      # TODO: add expiry etc.
-      return false unless auth_meta_data # FIXME: use Struct.
-      return false unless auth_meta_data[:confirmation_token].size > 0
-      return false if token and token != auth_meta_data[:confirmation_token]
-      true
-    end
-
-    # alias_method :confirmed?, :confirmable?
-    def confirmed?
-      return false unless auth_meta_data #FIXME, of course.
-      return true if auth_meta_data.has_key?(:confirmation_token)  and auth_meta_data[:confirmation_token].nil?
-      return false if auth_meta_data[:confirmation_token].size > 0
-    end
-  end
-
-
-
   # DISCUSS: maybe call ConfirmationTokenIsValid
   class IsConfirmable < Trailblazer::Operation
     include CRUD # TODO: implement with twin.
@@ -209,7 +188,7 @@ module Session
 
     def process(params)
       token = params[:confirmation_token]
-      return invalid! unless Authenticatable.new(model).confirmable?(token)
+      return invalid! unless Tyrant::Authenticatable.new(model).confirmable?(token)
     end
   end
 end
