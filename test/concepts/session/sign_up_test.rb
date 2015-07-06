@@ -12,7 +12,8 @@ class SessionSignUpTest < MiniTest::Spec
 
     op.model.persisted?.must_equal true
     op.model.email.must_equal "selectport@trb.org"
-    assert op.model.password_digest
+
+    assert Tyrant::Authenticatable.new(op.model).digest == "123123"
   end
 
   # not filled out.

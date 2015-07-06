@@ -19,14 +19,14 @@ module Session
         return errors.add(:password, "Wrong password.") unless @user # TODO: test me.
 
         # DISCUSS: move validation of PW to Op#process?
-        errors.add(:password, "Wrong password.") unless Monban.config.authentication_service.new(@user, password).perform
+        errors.add(:password, "Wrong password.") unless Tyrant::Authenticatable.new(@user).digest?(password)#
       end
     end
 
     def process(params)
       # model = User.find_by_email(email) 00000> pass user into form?
       validate(params[:session], nil) do |contract|
-        # Monban.config.sign_in_service.new(contract.user).perform
+         # Monban.config.sign_in_service.new(contract.user).perform
         @model = contract.user
       end
     end
@@ -48,7 +48,6 @@ module Session
       property :email
       property :password, virtual: true
       property :confirm_password, virtual: true
-      property :password_digest#, deserializer: { writeable: false }
 
       validates :email, :password, :confirm_password, presence: true
       validates :email, email: true, unique: true
@@ -72,11 +71,15 @@ module Session
       validate(params[:user]) do |contract|
         # form.email, form.password
         #or password
-        contract.password_digest = Monban.hash_token(contract.password)
-        contract.save# do |hash|
-          # Monban.config.sign_up_service.new(email: "foo@example.com", password: "password").perform
-          #Monban.config.sign_up_service.new(hash).perform
-        # end
+        # contract.password_digest = Monban.hash_token(contract.password)
+
+        auth = Tyrant::Authenticatable.new(contract.model)
+        auth.digest!(contract.password)
+
+        auth.sync # contract.auth_meta_data.password_digest = ..
+
+
+        contract.save
       end
     end
 
@@ -133,7 +136,6 @@ module Session
     contract do
       property :password, virtual: true
       property :confirm_password, virtual: true
-      property :password_digest#, deserializer: { writeable: false }
 
       validates :password, :confirm_password, presence: true
       validate :password_ok?
@@ -160,11 +162,11 @@ module Session
       @requires_old = params[:requires_old]
 
       validate(params[:user]) do
-        contract.password_digest = Monban.hash_token(contract.password)
-        # TODO: do with tyrant API.
-        # raise model.inspect
-        model.auth_meta_data[:confirmation_token]=nil
-        # model.auth_meta_data[:confirmation_token]=nil
+        auth = Tyrant::Authenticatable.new(contract.model)
+        auth.digest!(contract.password)
+        auth.confirmed!
+        auth.sync
+
         contract.save# do |hash|
       end
     end

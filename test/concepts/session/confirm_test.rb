@@ -32,8 +32,9 @@ class SessionConfirmTest < MiniTest::Spec
 
     op = Session::ChangePassword.(requires_old: false, id: user.id, user: {password: "123", confirm_password: "123"})
     user.reload
-    assert user.password_digest
-    assert user.password_digest.size > 0
+
+    Tyrant::Authenticatable.new(user).confirmed?.must_equal true
+    assert Tyrant::Authenticatable.new(user).digest == "123"
   end
 
   # not-existent id.
