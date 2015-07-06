@@ -62,7 +62,7 @@ class Thing < ActiveRecord::Base
 
       def unconfirmed_users_limit_reached?
         users.each do |user|
-          next unless user.model.auth_meta_data and user.model.auth_meta_data[:confirmation_token]
+          next unless Tyrant::Authenticatable.new(user.model).confirmable?
           next unless users.added.include?(user) # this covers Update, and i don't really like it here.
           next if user.model.authorships.size == 0
           errors.add("users", "User is unconfirmed and already assign to another thing.")

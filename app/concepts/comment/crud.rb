@@ -43,6 +43,7 @@ class Comment < ActiveRecord::Base
     def process(params)
       validate(params[:comment]) do |f|
         dispatch!
+        # puts f.user.model.inspect
         f.save # save comment and user.
       end
     end

@@ -23,7 +23,8 @@ class CommentCrudTest < MiniTest::Spec
       comment.user.email.must_equal "jonny@trb.org"
       # unconfirmed signup.
       # TODO: this shouldn't be tested like that here, but use tyrant's public API.
-      comment.user.auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
+      # comment.user.auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
+      Tyrant::Authenticatable.new(comment.user).confirmable?.must_equal true
 
       op.thing.must_equal thing
     end

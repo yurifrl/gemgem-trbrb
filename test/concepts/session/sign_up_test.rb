@@ -73,8 +73,6 @@ class SessionSignUpUnconfirmedNeedsPasswordTest < MiniTest::Spec
     user.email.must_equal "selectport@trb.org"
     user.password_digest.must_equal nil
 
-    user.auth_meta_data[:confirmation_token].must_equal "asdfasdfasfasfasdfasdf"
-    user.auth_meta_data[:confirmation_created_at].must_equal "assddsf"
-
+    Tyrant::Authenticatable.new(user).confirmable?.must_equal true
   end
 end

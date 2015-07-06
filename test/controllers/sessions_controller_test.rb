@@ -95,7 +95,9 @@ class SessionsControllerTest < IntegrationTest
   it "xxx" do
     user = Thing::Create.(thing: {name: "Taz", users: [{"email"=> "fred@taz.de"}]}).model.users[0]
 
-    visit "sessions/activate_form/#{user.id}/?confirmation_token=#{user.auth_meta_data[:confirmation_token]}"
+    token = Tyrant::Authenticatable.new(user).confirmation_token
+
+    visit "sessions/activate_form/#{user.id}/?confirmation_token=#{token}"
 
     page.must_have_content "account, fred@taz.de!"
     page.must_have_css "#user_password"

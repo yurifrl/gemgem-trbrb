@@ -118,19 +118,9 @@ module Session
       end
 
       def process(params)
-        # @contract = contract_for(nil, params[:user])
-        # if @contract.validate({}) # DISCUSS: do we need that?
-          params[:user].auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
-        #   @contract.save
-        #   return
-        # end
-        # return invalid!
-
-        # # TODO: i want the user here!
-        # validate(params[:user]) do |contract|
-        #   model.auth_meta_data = {confirmation_token: "asdfasdfasfasfasdfasdf", confirmation_created_at: "assddsf"}
-        #   contract.save
-        # end
+        auth = Tyrant::Authenticatable.new(params[:user])
+        auth.confirmable!
+        auth.sync # DISCUSS: sync here?
       end
     end
   end

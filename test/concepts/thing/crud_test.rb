@@ -103,9 +103,10 @@ class ThingCrudTest < MiniTest::Spec
 
 
       # unconfirmed signup.
-      # TODO: this shouldn't be tested like that here, but use tyrant's public API.
-      model.users[0].auth_meta_data.must_equal(nil) # existing user doesn't need unconfirmed signup.
-      model.users[1].auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
+      Tyrant::Authenticatable.new(model.users[0]).confirmable?.must_equal false # TODO: entry points for users!
+      # model.users[0].auth_meta_data.must_equal(nil) # existing user doesn't need unconfirmed signup.
+      # model.users[1].auth_meta_data.must_equal({:confirmation_token=>"asdfasdfasfasfasdfasdf", :confirmation_created_at=>"assddsf"})
+      Tyrant::Authenticatable.new(model.users[1]).confirmable?.must_equal true
     end
 
     # too many users
