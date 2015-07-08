@@ -21,8 +21,32 @@ class ThingsControllerTest < IntegrationTest
 
       # 3 author email fields
       page.must_have_css("input.email", count: 3) # TODO: how can i say "no value"?
+      page.wont_have_css("#thing_is_author")
+    end
+
+    # SignedIn
+    it "what" do
+      sign_in!
+
+      visit "/things/new"
+
+      page.must_have_css "form #thing_name"
+      page.wont_have_css "form #thing_name.readonly"
+
+      # 3 author email fields
+      page.must_have_css("input.email", count: 3) # TODO: how can i say "no value"?
+      page.must_have_css("#thing_is_author")
+
+      fill_in 'Name', with: "Bad Religion"
+      check "I'm the author!"
+      click_button "Create Thing"
+
+      page.current_path.must_equal thing_path(Thing.last)
+
+      page.must_have_content "By fred@trb.org"
     end
   end
+
 
   describe "#create" do
     it do
