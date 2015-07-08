@@ -99,7 +99,7 @@ class SessionsControllerTest < IntegrationTest
   # end
 
   # wrong token for activate.
-  it("xxxx") do
+  it do
     user = Thing::Create.(thing: {name: "Taz", users: [{"email"=> "fred@taz.de"}]}).model.users[0]
 
     visit "sessions/activate_form/#{user.id}/?confirmation_token=ALL-WRONG"
@@ -108,7 +108,7 @@ class SessionsControllerTest < IntegrationTest
   end
 
   # unconfirmed-needs-password activates account.
-  it "xxx" do
+  it do
     user = Thing::Create.(thing: {name: "Taz", users: [{"email"=> "fred@taz.de"}]}).model.users[0]
 
     token = Tyrant::Authenticatable.new(user).confirmation_token

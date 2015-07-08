@@ -26,7 +26,7 @@ PATH
     tyrant (0.0.1)
       bcrypt
       disposable (>= 0.1.6)
-      reform (>= 2.0.0.rc1)
+      reform (>= 2.0.0.rc2)
       trailblazer
 
 GEM

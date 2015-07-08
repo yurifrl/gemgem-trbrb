@@ -12,7 +12,7 @@ module Admin
       end
 
       def checked
-        "checked=1" if Session::Authenticatable.new(model).confirmed?
+        "checked=1" if Tyrant::Authenticatable.new(model).confirmed?
       end
     end # Cell
   end
