@@ -91,6 +91,22 @@ class SessionsControllerTest < IntegrationTest
   end
 
 
+  # non-existent user
+  # it do
+  #   visit "sessions/activate_form/99/?confirmation_token=ALL-WRONG"
+
+  #   page.must_have_content "Welcome"
+  # end
+
+  # wrong token for activate.
+  it("xxxx") do
+    user = Thing::Create.(thing: {name: "Taz", users: [{"email"=> "fred@taz.de"}]}).model.users[0]
+
+    visit "sessions/activate_form/#{user.id}/?confirmation_token=ALL-WRONG"
+
+    page.current_path.must_equal "/"
+  end
+
   # unconfirmed-needs-password activates account.
   it "xxx" do
     user = Thing::Create.(thing: {name: "Taz", users: [{"email"=> "fred@taz.de"}]}).model.users[0]

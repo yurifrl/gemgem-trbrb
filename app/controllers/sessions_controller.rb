@@ -43,7 +43,8 @@ class SessionsController < ApplicationController
 
   # TODO: should be in one Op.
   # we could also provide 2 different steps: via before filter OR validate token in form?
-  before_filter only: [:activate_form] { res, op=Session::IsConfirmable.run(params); res ? "" : redirect_to( root_path) }
+  before_filter only: [:activate_form] { Session::IsConfirmable.reject(params) { redirect_to( root_path) } }
+
   def activate_form
     form Session::ChangePassword # TODO: require_original: true
   end
