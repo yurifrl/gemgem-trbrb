@@ -60,6 +60,7 @@ module Session
     end
 
 
+    # Used to created activatable users, e.g. with comment or thing-author..
     class UnconfirmedNoPassword < Trailblazer::Operation
       contract do
         property :email
