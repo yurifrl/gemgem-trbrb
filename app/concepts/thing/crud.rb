@@ -8,6 +8,26 @@
 # how does skipping work: Form.new[user, user2], then validate with [user, user2:skip,user], user2 will still be there but not updated.
 #   save => users = [user] (without deleted), removes user from collection.
 class Thing < ActiveRecord::Base
+  module SignedIn
+    include Trailblazer::Operation::Module
+
+    contract do
+      property :is_author, virtual: true
+    end
+
+    callback(:before_save) do
+      on_change :add_current_user_as_author!, property: :is_author
+    end
+
+    def add_current_user_as_author!(thing)
+      thing.users << @current_user
+    end
+
+    def setup_params!(params) # TODO: allow passing params to callback.
+      @current_user = params[:current_user]
+    end
+  end
+
   class Create < Trailblazer::Operation
     builds do |params|
       SignedIn if params[:current_user]
@@ -140,29 +160,19 @@ class Thing < ActiveRecord::Base
       end
     end
 
-
     class SignedIn < self
-      contract do
-        property :is_author, virtual: true
-      end
-
-      callback(:before_save) do
-        on_change :add_current_user_as_author!, property: :is_author
-      end
-
-      def add_current_user_as_author!(thing)
-        thing.users << @current_user
-      end
-
-      def setup_params!(params) # TODO: allow passing params to callback.
-        @current_user = params[:current_user]
-      end
+      include Thing::SignedIn
     end
-
   end
 
 
+
+
   class Update < Create
+    builds do |params|
+      SignedIn if params[:current_user]
+    end
+
     action :update
     # skip_dispatch :notify_authors!
 
@@ -192,5 +202,10 @@ class Thing < ActiveRecord::Base
         return true if fragment["email"].blank?
       end
     end
-  end
+
+
+    class SignedIn < self
+      include Thing::SignedIn
+    end
+  end # Update
 end

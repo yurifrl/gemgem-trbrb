@@ -41,11 +41,27 @@ class ThingsControllerTest < IntegrationTest
       check "I'm the author!"
       click_button "Create Thing"
 
+      # /things/1
       page.current_path.must_equal thing_path(Thing.last)
-
       page.must_have_content "By fred@trb.org"
+
+      click_link "Edit"
+
+      # /things/1/edit
+      page.must_have_css "form #thing_name"
+      page.must_have_css "form #thing_name.readonly"
+
+      fill_in "Description", with: "Great band"
+      click_button "Update Thing"
+
+      page.current_path.must_equal thing_path(Thing.last)
+      page.must_have_content "Great band"
     end
   end
+
+
+  # controller tests are what i normally do manually, per "concept"
+  # see above: workflow for login, create thing, update thing, check markup, that's it.
 
 
   describe "#create" do
