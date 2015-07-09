@@ -73,10 +73,18 @@ class Comment < ActiveRecord::Base
         # TODO: allow to skip.
       end
 
-      def setup_params!(params)
-          # FIXME: this is also called in Op#form context. find a better way for "params handling".
-        params[:comment][:user] = params[:current_user] if params[:comment]# TODO: how do we handle missing [:comment]?
+      def process(params)
+        params[:comment].delete(:user_attributes)  # FIXME!
+        params[:comment][:user] = params[:current_user]
+
+        puts "@@@@@-------- #{params.inspect}"
+        super
       end
+
+      # def setup_params!(params)
+      #     # FIXME: this is also called in Op#form context. find a better way for "params handling".
+      #   params[:comment][:user] = params[:current_user] if params[:comment]# TODO: how do we handle missing [:comment]?
+      # end
     end
   end
 end

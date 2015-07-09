@@ -7,13 +7,6 @@ GIT
       tilt
 
 PATH
-  remote: ../disposable
-  specs:
-    disposable (0.1.6)
-      representable (>= 2.2.3, <= 2.3.0)
-      uber
-
-PATH
   remote: ../trailblazer
   specs:
     trailblazer (0.3.1)
@@ -106,6 +99,9 @@ GEM
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    disposable (0.1.6)
+      representable (>= 2.2.3, <= 2.3.0)
+      uber
     dragonfly (1.0.10)
       addressable (~> 2.3)
       multi_json (~> 1.0)
@@ -295,7 +291,6 @@ DEPENDENCIES
   cells (= 4.0.2)
   cells-haml (= 0.0.8)
   coffee-rails (~> 4.0.0)
-  disposable!
   email_validator
   file_validators
   foundation-icons-sass-rails

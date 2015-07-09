@@ -33,7 +33,7 @@ gem "reform", "2.0.0.rc3"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
-gem "disposable", path: "../disposable"
+# gem "disposable", path: "../disposable"
 gem "tyrant", path: "../tyrant"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
