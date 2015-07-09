@@ -163,6 +163,8 @@ GEM
       capybara (~> 2.2)
       minitest (~> 5.0)
       rake
+    minitest-line (0.6.2)
+      minitest (~> 5.0)
     minitest-metadata (0.5.3)
       minitest (>= 4.7, < 6.0)
     minitest-rails (2.2.0)
@@ -300,6 +302,7 @@ DEPENDENCIES
   high_voltage
   jquery-rails
   kaminari-cells
+  minitest-line
   minitest-rails-capybara
   monban
   paperdragon (>= 0.0.8)
