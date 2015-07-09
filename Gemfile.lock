@@ -228,7 +228,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
     ref (1.0.5)
-    reform (2.0.0.rc2)
+    reform (2.0.0.rc3)
       disposable (~> 0.1.5)
       uber (~> 0.0.11)
     representable (2.2.3)
@@ -314,7 +314,7 @@ DEPENDENCIES
   rails-timeago
   rails_12factor
   rails_layout
-  reform (= 2.0.0.rc2)
+  reform (= 2.0.0.rc3)
   responders
   roar (= 1.0.0)
   sass-rails (~> 4.0.3)

@@ -29,7 +29,7 @@ end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
 # gem "reform", path: "../reform"
-gem "reform", "2.0.0.rc2"
+gem "reform", "2.0.0.rc3"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
