@@ -74,32 +74,13 @@ class Comment < ActiveRecord::Base
       end
 
       def process(params)
-        (@contract = contract_for(nil, model)).user = params[:current_user]
+        contract.user = params[:current_user]
 
 
         # params[:comment].delete(:user_attributes)  # FIXME!
         # params[:comment][:user] = params[:current_user]
-
-        # puts "@@@@@-------- #{params.inspect}"
         super
-
-        puts @contract.user.inspect
-        puts
-        puts @contract.model.inspect
       end
-
-      def validate(params)
-
-        if @valid = validate_contract(params)
-          yield contract if block_given?
-        else
-          raise!(contract)
-        end
-
-        @valid
-      end
-
-
 
       # def setup_params!(params)
       #     # FIXME: this is also called in Op#form context. find a better way for "params handling".

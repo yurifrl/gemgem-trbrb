@@ -229,5 +229,25 @@ class ThingSignedInCrudTest < MiniTest::Spec
 
       model.users.map { |u| u.email }.must_equal(["nick@trb.org", "solnic@trb.org"])
     end
+
+    # FIXME: shit, this test passes, even though i want it to fail. :)
+    # it "allows removing signed_in user" do
+    #   op  = Thing::Create.(
+    #     current_user: current_user,
+    #     thing:        {name: "Rails  ", users: [{"email"=>"joe@trb.org"}], "is_author"=>1}
+    #   )
+    #   joe = op.model.users[0]
+    #   op.model.users.size.must_equal 2
+
+    #   res, op = Thing::Update.run(id: op.model.id, thing: {name: "Rails",
+    #     users: [{"id"=>joe.id.to_s, "remove"=>"1"},
+    #             {"id"=>current_user.id.to_s, "remove"=>"1"}]
+    #   })
+
+    #   res.must_equal true
+    #   op.model.users.must_equal []
+    #   joe.persisted?.must_equal true
+    #   current_user.persisted?.must_equal true
+    # end
   end
 end
