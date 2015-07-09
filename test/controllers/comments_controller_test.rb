@@ -29,7 +29,7 @@ class CommentsControllerIntegrationTest < IntegrationTest
     page.must_have_css ".comment", text: "Tired of Rails"
   end
 
-  # signed in.
+  # signed in, validations fail.
   it do
     sign_in!
 
@@ -47,5 +47,10 @@ class CommentsControllerIntegrationTest < IntegrationTest
     click_button "Create Comment"
 
     page.must_have_content "is too short"
+
+    fill_in "Your comment", with: "Tired of Rails"
+    click_button "Create Comment"
+
+    page.must_have_content "Created comment"
   end
 end
