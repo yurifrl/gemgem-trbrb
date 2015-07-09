@@ -65,7 +65,7 @@ class Comment < ActiveRecord::Base
 
     class SignedIn < Create
       contract do
-        property :user # TODO: allow to remove.
+        property :user, deserializer: {writeable: false} # TODO: allow to remove.
         validates :user, presence: :true
       end
 
@@ -74,12 +74,32 @@ class Comment < ActiveRecord::Base
       end
 
       def process(params)
-        params[:comment].delete(:user_attributes)  # FIXME!
-        params[:comment][:user] = params[:current_user]
+        (@contract = contract_for(nil, model)).user = params[:current_user]
 
-        puts "@@@@@-------- #{params.inspect}"
+
+        # params[:comment].delete(:user_attributes)  # FIXME!
+        # params[:comment][:user] = params[:current_user]
+
+        # puts "@@@@@-------- #{params.inspect}"
         super
+
+        puts @contract.user.inspect
+        puts
+        puts @contract.model.inspect
       end
+
+      def validate(params)
+
+        if @valid = validate_contract(params)
+          yield contract if block_given?
+        else
+          raise!(contract)
+        end
+
+        @valid
+      end
+
+
 
       # def setup_params!(params)
       #     # FIXME: this is also called in Op#form context. find a better way for "params handling".
