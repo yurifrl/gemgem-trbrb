@@ -4,10 +4,8 @@ gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.0.0"
 gem "jquery-rails"
-gem "spring",        group: :development
 gem "foundation-rails", "5.4.5.0"
 gem "haml-rails"
-gem "high_voltage"
 gem "simple_form"
 gem "therubyracer", :platform=>:ruby
 gem "thin"
@@ -30,7 +28,7 @@ end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
 # gem "reform", path: "../reform"
-gem "reform", "2.0.0.rc3"
+gem "reform", "2.0.0"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
@@ -38,8 +36,8 @@ gem "virtus"
 gem "tyrant", path: "../tyrant"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
-gem "trailblazer", path: "../trailblazer"
-# gem "trailblazer", "0.3.0"
+# gem "trailblazer", path: "../trailblazer"
+gem "trailblazer", "0.3.2"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
