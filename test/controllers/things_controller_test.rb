@@ -56,7 +56,33 @@ class ThingsControllerTest < IntegrationTest
 
       page.current_path.must_equal thing_path(Thing.last)
       page.must_have_content "Great band"
+
+
+      # Remove signed in author.
+      click_link "Edit"
+
+      # check "I'm the author!"
+      check("Remove")
+      click_button "Update Thing"
+
+      page.current_path.must_equal thing_path(Thing.last)
+      page.wont_have_content "By fred@trb.org"
     end
+
+    # this is tested in ThingCrud.
+    # # signed in: create thing without adding author.
+    # it "xxx" do
+    #   sign_in!
+
+    #   visit "/things/new"
+
+    #   fill_in 'Name', with: "Bad Religion"
+    #   click_button "Create Thing"
+
+    #   # /things/1
+    #   page.current_path.must_equal thing_path(Thing.last)
+    #   page.wont_have_content "By fred@trb.org"
+    # end
   end
 
 

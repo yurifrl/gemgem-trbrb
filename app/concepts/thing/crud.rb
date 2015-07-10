@@ -12,7 +12,7 @@ class Thing < ActiveRecord::Base
     include Trailblazer::Operation::Module
 
     contract do
-      property :is_author, virtual: true
+      property :is_author, virtual: true, default: "0"
     end
 
     callback(:before_save) do
@@ -187,8 +187,6 @@ class Thing < ActiveRecord::Base
           model.persisted?
         end
       end
-
-      # Disposable::Twin::Callback::Runner.new(f.users).on_delete { |twin| on_remove!(twin) }
 
     private
       def skip_user?(fragment, options)
