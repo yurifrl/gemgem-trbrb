@@ -84,12 +84,9 @@ class Thing < ActiveRecord::Base
 
       def unconfirmed_users_limit_reached?
         users.each do |user|
-          next unless Tyrant::Authenticatable.new(user.model).confirmable?
           next unless users.added.include?(user) # this covers Update, and i don't really like it here.
-          next if user.model.authorships.size == 0
-          errors.add("users", "User is unconfirmed and already assign to another thing.")
+          next if Thing::Create::IsLimitReached.(user.model, errors)
         end
-
       end
 
     private
@@ -99,6 +96,15 @@ class Thing < ActiveRecord::Base
 
       def populate_users!(params, options)
         User.find_by_email(params["email"]) or User.new
+      end
+    end
+
+    class IsLimitReached
+      def self.call(user, errors)
+        return unless Tyrant::Authenticatable.new(user).confirmable?
+
+        return if user.authorships.size == 0 && user.comments.size == 0
+        errors.add("users", "User is unconfirmed and already assign to another thing or reached comment limit.")
       end
     end
 

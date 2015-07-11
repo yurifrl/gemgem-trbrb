@@ -9,7 +9,6 @@ class Comment < ActiveRecord::Base
 
     contract do
       include Reform::Form::ModelReflections
-      feature Disposable::Twin::Persisted
 
       def self.weights
         {"0" => "Nice!", "1" => "Rubbish!"}
@@ -29,10 +28,17 @@ class Comment < ActiveRecord::Base
       validates :thing, :user, presence: true
 
       property :user,
-          prepopulator:      ->(*) { self.user = User.new },
-          populate_if_empty: ->(*) { User.new } do
+          prepopulator: ->(*) { self.user = User.new },
+          # populator: :populate_user! do
+          populator: ->(fragment, *) { self.user = User.find_by(email: fragment["email"]) || User.new } do
         property :email
         validates :email, presence: true, email: true
+      end
+
+      validate { user and Thing::Create::IsLimitReached.call(user.model, errors) }
+
+      def populate_user!(fragment, *)
+        self.user = User.find_by(email: fragment["email"]) or User.new
       end
     end
 
@@ -65,7 +71,8 @@ class Comment < ActiveRecord::Base
 
     class SignedIn < Create
       contract do
-        property :user, deserializer: {writeable: false} # TODO: allow to remove.
+        property :user, deserializer: {writeable: false} do
+        end # TODO: allow to remove.
         validates :user, presence: :true
       end
 
@@ -75,7 +82,6 @@ class Comment < ActiveRecord::Base
 
       def process(params)
         contract.user = params[:current_user]
-
 
         # params[:comment].delete(:user_attributes)  # FIXME!
         # params[:comment][:user] = params[:current_user]

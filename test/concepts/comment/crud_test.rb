@@ -67,49 +67,22 @@ class CommentCrudTest < MiniTest::Spec
   end
 
 
-  # # create only works once with unregistered (new) user.
-  # it do
-  #   op = comment::Create[
-  #     rating: {
-  #       comment: "Fantastic!",
-  #       weight:  1,
-  #       user:    {email: "gerd@wurst.com"}
-  #     },
-  #     id: thing.id
-  #   ]
+  # # create only works once with unconfirmed user.
+  it("xxx") do
+    params = {
+      id:      thing.id,
+      comment: {"body"=>"Fantastic!", "weight"=>"1", "user"=>{"email"=>"joe@trb.org"}}
+    }
 
-  #   op.unconfirmed?.must_equal true
+    op = Comment::Create.(params)
 
-  #   # second call is invalid!
-  #   res, op = Rating::Create.run(
-  #     rating: {
-  #       comment: "Absolutely amazing!",
-  #       weight:  1,
-  #       user:    {email: "gerd@wurst.com"}
-  #     },
-  #     id: thing.id
-  #   )
+    # second call is invalid!
+    res, op = Comment::Create.run(params)
 
-  #   res.must_equal false
-  #   op.contract.errors.to_s.must_equal "{:\"user.email\"=>[\"User needs to be confirmed first.\"]}"
-  # end
-  # # TODO: test registered user (unconfirmed? must always be true).with and without user: {}
+    res.must_equal false
+    op.contract.errors.to_s.must_equal "{:users=>[\"User is unconfirmed and already assign to another thing or reached comment limit.\"]}"
+  end
 
-  # # delete
-  # it do
-  #   rating = Rating::Create[
-  #     rating: {
-  #       comment: "Fantastic!",
-  #       weight:  1,
-  #       user:    {email: "gerd@wurst.com"}
-  #     },
-  #     id: thing.id
-  #   ].model
-
-  #   Rating::Delete[id: rating.id].must_equal rating
-
-  #   Rating.find(rating.id).deleted.must_equal 1
-  # end
 
   class CommentSignedInTest < MiniTest::Spec
     let (:thing) { Thing::Create[thing: {name: "Ruby"}].model }
