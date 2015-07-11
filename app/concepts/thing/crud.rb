@@ -20,6 +20,7 @@ class Thing < ActiveRecord::Base
     end
 
     def add_current_user_as_author!(thing)
+      # puts "@@@@@ #{thing.is_author.inspect}"
       thing.users << @current_user
     end
 
@@ -27,6 +28,7 @@ class Thing < ActiveRecord::Base
       @current_user = params[:current_user]
     end
   end
+
 
   class Create < Trailblazer::Operation
     builds do |params|

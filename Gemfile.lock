@@ -167,10 +167,6 @@ GEM
       minitest-capybara (~> 0.7.0)
       minitest-metadata (~> 0.5.0)
       minitest-rails (~> 2.1)
-    monban (0.2.1)
-      bcrypt
-      rails
-      warden
     multi_json (1.11.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -297,7 +293,6 @@ DEPENDENCIES
   kaminari-cells
   minitest-line
   minitest-rails-capybara
-  monban
   paperdragon (>= 0.0.8)
   pg
   quiet_assets
@@ -316,6 +311,7 @@ DEPENDENCIES
   tyrant!
   uglifier (>= 1.3.0)
   virtus
+  warden
 
 BUNDLED WITH
    1.10.5

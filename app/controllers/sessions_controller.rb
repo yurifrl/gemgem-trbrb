@@ -21,10 +21,11 @@ class SessionsController < ApplicationController
   end
 
   # TODO: test me.
-  alias_method :sign_in!, :sign_in
   def sign_in
     run Session::SignIn do |op|
-      sign_in!(op.model)
+
+      warden.set_user(op.model)
+
       return redirect_to root_path
     end
 
@@ -32,10 +33,11 @@ class SessionsController < ApplicationController
   end
 
   # TODO: test me.
-  alias_method :sign_out!, :sign_out
   def sign_out
     run Session::Signout do
-      sign_out!
+
+      warden.logout
+
       redirect_to root_path
     end
   end

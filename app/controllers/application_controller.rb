@@ -7,7 +7,22 @@ class ApplicationController < ActionController::Base
   require 'trailblazer/operation/controller/active_record'
   include Trailblazer::Operation::Controller::ActiveRecord # named instance variables.
 
-  include Monban::ControllerHelpers # TODO: only use signed_in, and current_user.
+  # include Monban::ControllerHelpers # TODO: only use signed_in, and current_user.
+  # FIXME: provide by tyrant.
+    def warden
+      request.env['warden']
+    end
+
+    def current_user
+      @current_user ||= warden.user
+    end
+    helper_method :current_user
+
+    def signed_in?
+      warden.user
+    end
+    helper_method :signed_in?
+
 
   def process_params!(params)
     params.merge!(current_user: current_user)

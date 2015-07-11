@@ -87,10 +87,6 @@ module Session
       validates :password, :confirm_password, presence: true
       validate :password_ok?
 
-
-      # TODO: separate form class:
-      property :confirmation_token, virtual: true
-
     private
       # TODO: more, like minimum 6 chars, etc.
       def password_ok?
@@ -102,8 +98,8 @@ module Session
     attr_reader :confirmation_token
     def setup_params!(params)
       @confirmation_token = params[:confirmation_token] # FIXME: separate class!
-      # contract.confirmation_token = @confirmation_token
     end
+
     # TODO: inherit from SignUp/share with module.
     def process(params)
       @requires_old = params[:requires_old]
