@@ -68,7 +68,7 @@ class CommentCrudTest < MiniTest::Spec
 
 
   # # create only works once with unconfirmed user.
-  it("xxx") do
+  it do
     params = {
       id:      thing.id,
       comment: {"body"=>"Fantastic!", "weight"=>"1", "user"=>{"email"=>"joe@trb.org"}}
@@ -81,6 +81,16 @@ class CommentCrudTest < MiniTest::Spec
 
     res.must_equal false
     op.contract.errors.to_s.must_equal "{:users=>[\"User is unconfirmed and already assign to another thing or reached comment limit.\"]}"
+  end
+
+  # existing comment email will associate user.
+  it do
+    user = Session::SignUp::Admin.(user: {"email"=>"joe@trb.org"}).model
+    op = Comment::Create.(
+      id:      thing.id,
+      comment: {"body"=>"Fantastic!", "weight"=>"1", "user"=>{"email"=>"joe@trb.org"}}
+    )
+    op.model.user.id.must_equal user.id
   end
 
 
