@@ -125,11 +125,5 @@ module Session
       return if Tyrant::Authenticatable.new(model).confirmable?(params[:confirmation_token])
       invalid!
     end
-
-    def self.reject(*args) # TODO: Implement in Trb.
-      run(*args).tap do |res, op|
-        yield op if res == false
-      end
-    end
   end
 end
