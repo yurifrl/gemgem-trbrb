@@ -20,7 +20,6 @@ class SessionsController < ApplicationController
     form Session::SignIn
   end
 
-  # TODO: test me.
   def sign_in
     run Session::SignIn do |op|
 
