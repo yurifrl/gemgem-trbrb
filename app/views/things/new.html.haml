@@ -9,7 +9,7 @@
   %fieldset
     %legend Do you know any authors?
 
-    - if signed_in?
+    - if tyrant.signed_in?
       .row
         = f.input :is_author, as: :boolean, label: "I'm the author!"
 

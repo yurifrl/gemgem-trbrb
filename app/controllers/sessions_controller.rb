@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   end
 
   # before_filter should be used when op not involved at all.
-  before_filter( only: [:sign_in_form, :sign_up_form]) { redirect_to root_path if signed_in? } # TODO: provide that by Tyrant::Controller.
+  before_filter( only: [:sign_in_form, :sign_up_form]) { redirect_to root_path if tyrant.signed_in? } # TODO: provide that by Tyrant::Controller.
   def sign_in_form
     form Session::SignIn
   end
@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
   def sign_in
     run Session::SignIn do |op|
 
-      warden.set_user(op.model)
+      tyrant.sign_in!(op.model)
 
       return redirect_to root_path
     end
@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
   def sign_out
     run Session::Signout do
 
-      warden.logout
+      tyrant.sign_out!
 
       redirect_to root_path
     end

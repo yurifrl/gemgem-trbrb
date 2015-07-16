@@ -7,23 +7,13 @@ class ApplicationController < ActionController::Base
   require 'trailblazer/operation/controller/active_record'
   include Trailblazer::Operation::Controller::ActiveRecord # named instance variables.
 
-  # FIXME: provide by tyrant.
-  def warden
-    request.env['warden']
+  def tyrant
+    Tyrant::Session.new(request.env['warden'])
   end
-
-  def current_user
-    warden.user
-  end
-  helper_method :current_user
-
-  def signed_in?
-    warden.user
-  end
-  helper_method :signed_in?
+  helper_method :tyrant
 
 
   def process_params!(params)
-    params.merge!(current_user: current_user)
+    params.merge!(current_user: tyrant.current_user)
   end
 end

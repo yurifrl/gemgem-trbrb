@@ -23,7 +23,7 @@
   = f.input :body, placeholder: "Your comment", label: false
   = f.collection_radio_buttons :weight, *@form.weights
 
-  - unless signed_in?
+  - unless tyrant.signed_in?
     = f.fields_for :user do |u|
       = u.input :email, placeholder: "Your Email", label: false
 
