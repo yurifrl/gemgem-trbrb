@@ -92,7 +92,7 @@ GEM
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    disposable (0.1.7)
+    disposable (0.1.9)
       representable (>= 2.2.3, <= 2.3.0)
       uber
     dragonfly (1.0.10)
@@ -214,8 +214,8 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
     ref (1.0.5)
-    reform (2.0.0)
-      disposable (~> 0.1.7)
+    reform (2.0.3)
+      disposable (~> 0.1.9)
       uber (~> 0.0.11)
     representable (2.2.3)
       multi_json
@@ -300,7 +300,7 @@ DEPENDENCIES
   rails-timeago
   rails_12factor
   rails_layout
-  reform (= 2.0.0)
+  reform (= 2.0.3)
   responders
   roar (= 1.0.0)
   sass-rails (~> 4.0.3)
