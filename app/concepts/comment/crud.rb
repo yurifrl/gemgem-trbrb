@@ -43,7 +43,7 @@ class Comment < ActiveRecord::Base
     end
 
     callback do
-      on_change :sign_up_unconfirmed!, property: :user
+      on_change :sign_up_sleeping!, property: :user
     end
 
     def process(params)
@@ -64,7 +64,7 @@ class Comment < ActiveRecord::Base
     end
 
     require_dependency "session/operations"
-    def sign_up_unconfirmed!(comment)
+    def sign_up_sleeping!(comment)
       Session::SignUp::UnconfirmedNoPassword.(user: comment.user.model)
     end
 
@@ -76,7 +76,7 @@ class Comment < ActiveRecord::Base
         validates :user, presence: :true
       end
 
-      def sign_up_unconfirmed!(comment)
+      def sign_up_sleeping!(comment)
         # TODO: allow to skip.
       end
 

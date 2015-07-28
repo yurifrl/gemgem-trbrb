@@ -1,6 +1,6 @@
 %h1 Activate your account, #{@form.model.email}!
 
-= simple_form_for(@form, url: session_activate_path(id: params[:id]), method: :post) do |f|
+= simple_form_for(@form, url: session_wake_up_path(id: params[:id]), method: :post) do |f|
   .row
     = f.input :password, placeholder: "Password", label: false
   .row

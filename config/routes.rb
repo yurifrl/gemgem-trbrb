@@ -15,8 +15,8 @@ Rails.application.routes.draw do
   get  "sessions/sign_in_form"
   post "sessions/sign_in"
 
-  get  "sessions/activate_form/:id", controller: :sessions, action: :activate_form
-  post "sessions/activate/:id", controller: :sessions, action: :activate, as: :session_activate
+  get  "sessions/wake_up_form/:id", controller: :sessions, action: :wake_up_form
+  post "sessions/wake_up/:id", controller: :sessions, action: :wake_up, as: :session_wake_up
 
   resources :users
 

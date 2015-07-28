@@ -30,7 +30,7 @@ module Session
     end
   end
 
-  class Signout < Trailblazer::Operation
+  class SignOut < Trailblazer::Operation
     def process(params)
       # empty for now, this could e.g. log signout, etc.
     end
@@ -73,7 +73,7 @@ module Session
     end
   end
 
-  class ChangePassword < Trailblazer::Operation
+  class ChangePassword < Trailblazer::Operation # WakeUp
     include CRUD
     model User, :find
 
@@ -103,13 +103,18 @@ module Session
       @requires_old = params[:requires_old]
 
       validate(params[:user]) do
-        auth = Tyrant::Authenticatable.new(contract.model)
-        auth.digest!(contract.password)
-        auth.confirmed!
-        auth.sync
-
-        contract.save# do |hash|
+        wake_up!
       end
+    end
+
+  private
+    def wake_up!
+      auth = Tyrant::Authenticatable.new(contract.model)
+      auth.digest!(contract.password)
+      auth.confirmed!
+      auth.sync
+
+      contract.save# do |hash|
     end
   end
 

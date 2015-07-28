@@ -113,7 +113,7 @@ class Thing < ActiveRecord::Base
     callback(:before_save) do
       on_change :upload_image!, property: :file
       collection :users do
-        on_add :sign_up_unconfirmed!
+        on_add :sign_up_sleeping!
       end
     end
 
@@ -153,7 +153,7 @@ class Thing < ActiveRecord::Base
     end
 
     require_dependency "session/operations"
-    def sign_up_unconfirmed!(user)
+    def sign_up_sleeping!(user)
       return if user.persisted? # only new
       Session::SignUp::UnconfirmedNoPassword.(user: user.model)
     end
