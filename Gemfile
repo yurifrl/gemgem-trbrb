@@ -51,6 +51,8 @@ gem "paperdragon", ">= 0.0.8"
 gem "file_validators"
 gem "roar", "1.0.0"
 
+gem "pundit"
+
 gem "rails-timeago"
 gem "email_validator"
 
