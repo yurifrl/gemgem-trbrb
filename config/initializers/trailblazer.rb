@@ -32,3 +32,15 @@ end
 Trailblazer::Operation.class_eval do
   include Trailblazer::Operation::Dispatch
 end
+
+
+require "reform/form/active_model/model_reflections"
+require "reform/form/lotus"
+require "reform/form/orm"
+Reform::Form.class_eval do
+  feature Reform::Form::Lotus
+  feature Reform::Form::ActiveModel
+  feature Reform::Form::ActiveModel::FormBuilderMethods
+  feature Reform::Form::ActiveRecord
+  feature Reform::Form::ORM
+end
