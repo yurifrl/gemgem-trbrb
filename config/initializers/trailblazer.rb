@@ -34,11 +34,12 @@ Trailblazer::Operation.class_eval do
 end
 
 
+require "reform/form/active_record"
 require "reform/form/active_model/model_reflections"
-require "reform/form/lotus"
+require "reform/form/veto"
 require "reform/form/orm"
 Reform::Form.class_eval do
-  feature Reform::Form::Lotus
+  feature Reform::Form::Veto::Validations
   feature Reform::Form::ActiveModel
   feature Reform::Form::ActiveModel::FormBuilderMethods
   feature Reform::Form::ActiveRecord

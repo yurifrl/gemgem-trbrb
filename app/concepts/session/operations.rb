@@ -7,7 +7,7 @@ module Session
       property :email,    virtual: true
       property :password, virtual: true
 
-      validates :email, :password, presence: true
+      # validates :email, :password, presence: true
       validate :password_ok?
 
     private
@@ -37,11 +37,11 @@ module Session
   end
 
 
-  require "reform/form/validation/unique_validator.rb"
+  # require "reform/form/validation/unique_validator.rb"
   require "tyrant/sign_up"
   class SignUp < Tyrant::SignUp::Confirmed
     contract do
-      validates :email, email: true, unique: true
+      validates :email, email: true#, unique: true
     end
 
 
@@ -62,7 +62,7 @@ module Session
     class UnconfirmedNoPassword < Trailblazer::Operation
       contract do
         property :email
-        validates :email, email: true#, unique: true, presence: true
+        # validates :email, email: true#, unique: true, presence: true
       end
 
       def process(params)
@@ -82,7 +82,7 @@ module Session
       property :password, virtual: true
       property :confirm_password, virtual: true
 
-      validates :password, :confirm_password, presence: true
+      # validates :password, :confirm_password, presence: true
       validate :password_ok?
 
     private

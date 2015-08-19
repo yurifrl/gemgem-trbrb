@@ -50,12 +50,12 @@ class Thing < ActiveRecord::Base
 
       extend Paperdragon::Model::Writer
       processable_writer :image
-      validates :file, file_size: { less_than: 1.megabyte },
-        file_content_type: { allow: ['image/jpeg', 'image/png'] }
+      # validates :file, file_size: { less_than: 1.megabyte },
+      #   file_content_type: { allow: ['image/jpeg', 'image/png'] }
 
 
       validates :name, presence: true
-      validates :description, length: {in: 4..160}, allow_blank: true
+      validates :description, length: {in: 4..160}#, allow_blank: true
 
       collection :users,
           prepopulator:      :prepopulate_users!,
@@ -65,7 +65,7 @@ class Thing < ActiveRecord::Base
         property :email
         property :remove, virtual: true
 
-        validates :email, presence: true, email: true
+        # validates :email, presence: true, email: true
         validate :authorship_limit_reached?
 
         def readonly? # per form.
@@ -79,10 +79,11 @@ class Thing < ActiveRecord::Base
           errors.add("user", "This user has too many unconfirmed authorships.")
         end
       end
-      validates :users, length: {maximum: 3}
-      validate :unconfirmed_users_limit_reached?
+      # validates :users, length: {maximum: 3}
+      validates :users, length: {in: 0..3}
+      validate :unconfirmed_users_limit_reached?, context: :entity
 
-      def unconfirmed_users_limit_reached?
+      def unconfirmed_users_limit_reached?(*)
         users.each do |user|
           next unless users.added.include?(user) # this covers Update, and i don't really like it here.
           next if Thing::Create::IsLimitReached.(user.model, errors)

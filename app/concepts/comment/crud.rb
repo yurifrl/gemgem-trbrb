@@ -25,17 +25,17 @@ class Comment < ActiveRecord::Base
 
       validates :body, length: { in: 6..160 }
       validates :weight, inclusion: { in: weights.keys }
-      validates :thing, :user, presence: true
+      # validates :thing, :user, presence: true
 
       property :user,
           prepopulator: ->(*) { self.user = User.new },
           # populator: :populate_user! do
           populator: ->(fragment, *) { self.user = User.find_by(email: fragment["email"]) || User.new } do
         property :email
-        validates :email, presence: true, email: true
+        validates :email, presence: true#, email: true
       end
 
-      validate { user and Thing::Create::IsLimitReached.call(user.model, errors) }
+      # validate { user and Thing::Create::IsLimitReached.call(user.model, errors) }
 
       def populate_user!(fragment, *)
         self.user = User.find_by(email: fragment["email"]) or User.new

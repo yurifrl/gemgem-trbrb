@@ -27,8 +27,10 @@ group :production do
 end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
-# gem "reform", path: "../reform"
-gem "reform", "2.0.3  "
+gem "reform", path: "../reform"
+# gem "reform", "2.0.3  "
+gem "veto", path: "../veto"
+
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
