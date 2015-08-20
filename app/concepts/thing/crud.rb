@@ -213,22 +213,6 @@ class Thing < ActiveRecord::Base
     class SignedIn < self
       include Thing::SignedIn
 
-      module ClassMethods
-        def policy(*args, &block)
-          @policies = [block]
-        end
-
-        attr_reader :policies
-      end
-      extend ClassMethods
-
-      def setup!(params)
-        super
-        instance_exec params, &self.class.policies.first or raise Pundit::NotAuthorizedError
-        #
-        # NotAuthorizedError.new(query: query, record: record, policy: policy)
-      end
-
       policy do |params| # happens after #model!
         # deny! raises
         # allow!
@@ -237,6 +221,7 @@ class Thing < ActiveRecord::Base
         # do that to find it "the pundit way".
         # Pundit.policy!(params[:current_user], model)
 
+        puts "@@@@@ #{model.users.inspect}"
         model.users.include?(params[:current_user])
 
         # authorize user, model, :update?
@@ -246,13 +231,26 @@ class Thing < ActiveRecord::Base
   end # Update
 
 
-  class Delete < Update
+  class Delete < Trailblazer::Operation
+    include CRUD # i don't want inheritance here.
+    model Thing, :find
+
     policy do |params|
       false
     end
 
     def process(params)
       model.destroy
+    end
+
+
+    class SignedIn < Update::SignedIn
+      # policy do |params|
+      #   false
+      # end
+      def process(params)
+        model.destroy
+      end
     end
   end
 end

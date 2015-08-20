@@ -206,10 +206,32 @@ class ThingCrudTest < MiniTest::Spec
 
 
   describe "Delete" do
-    it "xxx" do
-      thing = Thing::Create.(thing: {name: "Rails", description: "Kickass web dev"}).model
-      thing = Thing::Delete.(id: thing.id).model
 
+    it "authorless can't be deleted" do
+      thing = Thing::Create.(thing: {name: "Rails", description: "Kickass web dev"}).model
+
+      assert_raises Trailblazer::NotAuthorizedError do
+        thing = Thing::Delete.(id: thing.id).model
+      end
+      thing.destroyed?.must_equal false
+    end
+
+    # signed in.
+
+    let (:current_user) { User::Create.(user: {email: "fred@trb.org"}).model }
+
+    it "can't be deleted because we're not author" do
+      thing = Thing::Create::SignedIn.(thing: {name: "Rails", users: [{"email"=>"joe@trb.org"}]}).model
+
+      assert_raises Trailblazer::NotAuthorizedError do
+        thing = Thing::Delete::SignedIn.(id: thing.id, current_user: current_user).model
+      end
+      thing.destroyed?.must_equal false
+    end
+
+    it "deleted by author" do
+      thing = Thing::Create::SignedIn.(thing: {name: "Rails", is_author: "1"}, current_user: current_user).model
+      thing = Thing::Delete::SignedIn.(id: thing.id, current_user: current_user).model
       thing.destroyed?.must_equal true
     end
   end
