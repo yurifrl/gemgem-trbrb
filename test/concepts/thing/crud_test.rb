@@ -203,6 +203,16 @@ class ThingCrudTest < MiniTest::Spec
       joe.persisted?.must_equal true
     end
   end
+
+
+  describe "Delete" do
+    it "xxx" do
+      thing = Thing::Create.(thing: {name: "Rails", description: "Kickass web dev"}).model
+      thing = Thing::Delete.(id: thing.id).model
+
+      thing.destroyed?.must_equal true
+    end
+  end
 end
 
 

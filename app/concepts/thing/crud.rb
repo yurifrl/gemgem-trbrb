@@ -212,6 +212,49 @@ class Thing < ActiveRecord::Base
 
     class SignedIn < self
       include Thing::SignedIn
+
+      module ClassMethods
+        def policy(*args, &block)
+          @policies = [block]
+        end
+
+        attr_reader :policies
+      end
+      extend ClassMethods
+
+      def setup!(params)
+        super
+        instance_exec params, &self.class.policies.first or raise Pundit::NotAuthorizedError
+        #
+        # NotAuthorizedError.new(query: query, record: record, policy: policy)
+      end
+
+      policy do |params| # happens after #model!
+        # deny! raises
+        # allow!
+
+
+        # do that to find it "the pundit way".
+        # Pundit.policy!(params[:current_user], model)
+
+        model.users.include?(params[:current_user])
+
+        # authorize user, model, :update?
+        # policy(@post).update?
+      end
     end
   end # Update
+
+
+  class Delete < Update
+    def process(params)
+      model.destroy
+    end
+  end
+end
+
+class ThingPolicy
+  def update?(user, thing)
+    user.owns?(thing) # FIXME: how to implement that nicely?
+  end
 end
