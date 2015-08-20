@@ -244,13 +244,11 @@ class Thing < ActiveRecord::Base
     end
 
 
-    class SignedIn < Update::SignedIn
-      # policy do |params|
-      #   false
-      # end
-      def process(params)
-        model.destroy
-      end
+    # needs: Delete CRUD config
+    #        Delete #process
+    #        Update::SignedIn policy
+    class SignedIn < self
+      self.policy_block = Update::SignedIn.policy_block
     end
   end
 end
