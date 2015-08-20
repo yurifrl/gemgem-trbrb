@@ -247,6 +247,10 @@ class Thing < ActiveRecord::Base
 
 
   class Delete < Update
+    policy do |params|
+      false
+    end
+
     def process(params)
       model.destroy
     end
