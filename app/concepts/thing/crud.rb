@@ -214,18 +214,8 @@ class Thing < ActiveRecord::Base
       include Thing::SignedIn
 
       policy do |params| # happens after #model!
-        # deny! raises
-        # allow!
-
-
-        # do that to find it "the pundit way".
-        # Pundit.policy!(params[:current_user], model)
-
         puts "@@@@@ #{model.users.inspect}"
         model.users.include?(params[:current_user])
-
-        # authorize user, model, :update?
-        # policy(@post).update?
       end
     end
   end # Update
@@ -248,7 +238,7 @@ class Thing < ActiveRecord::Base
     #        Delete #process
     #        Update::SignedIn policy
     class SignedIn < self
-      self.policy_block = Update::SignedIn.policy_block
+      self.policy_class = Update::SignedIn.policy_class
     end
   end
 end

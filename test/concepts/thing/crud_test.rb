@@ -206,7 +206,6 @@ class ThingCrudTest < MiniTest::Spec
 
 
   describe "Delete" do
-
     it "authorless can't be deleted" do
       thing = Thing::Create.(thing: {name: "Rails", description: "Kickass web dev"}).model
 
