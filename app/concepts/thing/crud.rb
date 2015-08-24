@@ -180,7 +180,22 @@ class Thing < ActiveRecord::Base
       model Thing, :find
 
       def process(params)
+        delete_images!
         model.destroy
+      end
+
+    private
+      class Bla < OpenStruct
+        extend Paperdragon::Model::Writer
+        processable_writer :image
+      end
+
+      def delete_images!
+        # FIXME: make this nice, of course.
+        Bla.new(image_meta_data: model.image_meta_data).image! do |v|
+          # v.delete!(:original)
+          # v.reprocess!(:thumb)   { |job| job.thumb!("120x120#") }
+        end
       end
     end
   end
