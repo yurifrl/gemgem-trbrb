@@ -59,6 +59,14 @@ class ThingsController  < ApplicationController
     render action: :new
   end
 
+  # TODO: test me.
+  def destroy
+    run Thing::Delete::SignedIn do |op|
+      flash[:notice] = "#{op.model.name} deleted."
+      return redirect_to root_path
+    end
+  end
+
 
   protect_from_forgery except: :next_comments # FIXME: this is only required in the test, things_controller_test.
   def next_comments
