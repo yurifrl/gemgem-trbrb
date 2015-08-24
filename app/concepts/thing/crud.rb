@@ -7,7 +7,8 @@
 
 # how does skipping work: Form.new[user, user2], then validate with [user, user2:skip,user], user2 will still be there but not updated.
 #   save => users = [user] (without deleted), removes user from collection.
-require_dependency "thing/policy.rb"
+require_dependency "thing/policy"
+require "trailblazer/operation/policy"
 
 class Thing < ActiveRecord::Base
   module SignedIn
@@ -37,69 +38,11 @@ class Thing < ActiveRecord::Base
       SignedIn if params[:current_user]
     end
 
-
     include CRUD#, Dispatch
     model Thing, :create
 
-    contract do
-      feature Disposable::Twin::Persisted
-
-      property :name
-      property :description
-
-      property :file, virtual: true
-      property :image_meta_data, deserializer: {writeable: false} # FIXME.
-
-      extend Paperdragon::Model::Writer
-      processable_writer :image
-      validates :file, file_size: { less_than: 1.megabyte },
-        file_content_type: { allow: ['image/jpeg', 'image/png'] }
-
-
-      validates :name, presence: true
-      validates :description, length: {in: 4..160}, allow_blank: true
-
-      collection :users,
-          prepopulator:      :prepopulate_users!,
-          populate_if_empty: :populate_users!,
-          skip_if:           :all_blank do
-
-        property :email
-        property :remove, virtual: true
-
-        validates :email, presence: true, email: true
-        validate :authorship_limit_reached?
-
-        def readonly? # per form.
-          model.persisted?
-        end
-        alias_method :removeable?, :readonly?
-
-      private
-        def authorship_limit_reached?
-          return if model.authorships.find_all { |au| au.confirmed == 0 }.size < 5
-          errors.add("user", "This user has too many unconfirmed authorships.")
-        end
-      end
-      validates :users, length: {maximum: 3}
-      validate :unconfirmed_users_limit_reached?
-
-      def unconfirmed_users_limit_reached?
-        users.each do |user|
-          next unless users.added.include?(user) # this covers Update, and i don't really like it here.
-          next if Thing::Create::IsLimitReached.(user.model, errors)
-        end
-      end
-
-    private
-      def prepopulate_users!(options)
-        (3 - users.size).times { users << User.new }
-      end
-
-      def populate_users!(params, options)
-        User.find_by_email(params["email"]) or User.new
-      end
-    end
+    require_dependency "thing/contract"
+    self.contract_class = Contract
 
     class IsLimitReached
       def self.call(user, errors)
@@ -111,7 +54,6 @@ class Thing < ActiveRecord::Base
     end
 
 
-    include Dispatch
     callback(:before_save) do
       on_change :upload_image!, property: :file
       collection :users do
@@ -163,9 +105,7 @@ class Thing < ActiveRecord::Base
     def process(params)
       validate(params[:thing]) do |f|
         dispatch!(:before_save)
-
         f.save
-
         dispatch!
       end
     end
@@ -187,9 +127,8 @@ class Thing < ActiveRecord::Base
 
       include Thing::SignedIn
 
-      policy do |params| # happens after #model!
-        model.users.include?(params[:current_user])
-      end
+      include Trailblazer::Operation::Policy::Pundit
+      policy Thing::Policy, :update?
 
 
       # skip_dispatch :notify_authors!
@@ -210,10 +149,6 @@ class Thing < ActiveRecord::Base
         def skip_user?(fragment, options)
           # don't process if it's getting removed!
           return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.id.to_s == fragment["id"] })
-
-          # skip when user is an existing one.
-          # return true if users[index] and users[index].model.persisted?
-
           # replicate skip_if: :all_blank logic.
           return true if fragment["email"].blank?
         end
@@ -225,13 +160,8 @@ class Thing < ActiveRecord::Base
     include CRUD
     model Thing, :find
 
-    require "trailblazer/operation/policy"
     include Trailblazer::Operation::Policy::Pundit
     policy Thing::Policy, :show?
-
-    def policy
-      @policy
-    end
   end
 
 
@@ -240,12 +170,16 @@ class Thing < ActiveRecord::Base
       # needs: Delete CRUD config
       #        Delete #process
       #        Update::SignedIn policy
-      self.policy_class = Update::SignedIn.policy_class
+      # self.policy_class = Update::SignedIn.policy_class
+
+      include Trailblazer::Operation::Policy::Pundit
+      policy Thing::Policy, :delete?
 
       include CRUD # i don't want inheritance here.
       model Thing, :find
 
       def process(params)
+        raise"delete"
         model.destroy
       end
     end
