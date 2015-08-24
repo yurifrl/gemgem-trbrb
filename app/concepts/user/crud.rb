@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
     model User, :create
 
     def process(params)
-      User.create(params[:user])
+      @model = User.create(params[:user])
     end
   end
 

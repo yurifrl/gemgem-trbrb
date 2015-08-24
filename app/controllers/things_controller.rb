@@ -28,7 +28,9 @@ class ThingsController  < ApplicationController
   end
 
   def create_comment
-    present Thing::Update
+    present Thing::Show
+    @op = @operation # FIXME.
+
     run Comment::Create do |op| # overrides @model and @form!
       flash[:notice] = "Created comment for \"#{op.thing.name}\""
       return redirect_to thing_path(op.thing)
@@ -60,7 +62,7 @@ class ThingsController  < ApplicationController
 
   protect_from_forgery except: :next_comments # FIXME: this is only required in the test, things_controller_test.
   def next_comments
-    present Thing::Update
+    present Thing::Show
 
     render js: concept("comment/cell/grid", @thing, page: params[:page]).(:append)
   end

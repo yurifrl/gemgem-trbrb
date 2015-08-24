@@ -43,6 +43,7 @@ class Thing < ActiveRecord::Base
 
     require_dependency "thing/contract"
     self.contract_class = Contract
+    contract_class.model Thing # TODO: do this automatically.
 
     class IsLimitReached
       def self.call(user, errors)
@@ -179,7 +180,6 @@ class Thing < ActiveRecord::Base
       model Thing, :find
 
       def process(params)
-        raise"delete"
         model.destroy
       end
     end
