@@ -7,6 +7,8 @@
 
 # how does skipping work: Form.new[user, user2], then validate with [user, user2:skip,user], user2 will still be there but not updated.
 #   save => users = [user] (without deleted), removes user from collection.
+require_dependency "thing/policy.rb"
+
 class Thing < ActiveRecord::Base
   module SignedIn
     include Trailblazer::Operation::Module
@@ -176,75 +178,77 @@ class Thing < ActiveRecord::Base
 
 
 
-  class Update < Create
-    builds do |params|
-      SignedIn if params[:current_user]
-    end
+  module Update
+    class SignedIn < Create
+      # builds do |params|
+      #   SignedIn if params[:current_user]
+      # end
+      action :update
 
-    action :update
-    # skip_dispatch :notify_authors!
-
-    contract do
-      property :name, writeable: false
-
-      # DISCUSS: should inherit: true be default?
-      collection :users, inherit: true, skip_if: :skip_user? do
-        property :email, skip_if: :skip_email?
-
-        def skip_email?(fragment, options)
-          model.persisted?
-        end
-      end
-
-    private
-      def skip_user?(fragment, options)
-        # don't process if it's getting removed!
-        return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.id.to_s == fragment["id"] })
-
-        # skip when user is an existing one.
-        # return true if users[index] and users[index].model.persisted?
-
-        # replicate skip_if: :all_blank logic.
-        return true if fragment["email"].blank?
-      end
-    end
-
-
-    class SignedIn < self
       include Thing::SignedIn
 
       policy do |params| # happens after #model!
-        puts "@@@@@ #{model.users.inspect}"
         model.users.include?(params[:current_user])
+      end
+
+
+      # skip_dispatch :notify_authors!
+
+      contract do
+        property :name, writeable: false
+
+        # DISCUSS: should inherit: true be default?
+        collection :users, inherit: true, skip_if: :skip_user? do
+          property :email, skip_if: :skip_email?
+
+          def skip_email?(fragment, options)
+            model.persisted?
+          end
+        end
+
+      private
+        def skip_user?(fragment, options)
+          # don't process if it's getting removed!
+          return true if fragment["remove"] == "1" and users.delete(users.find { |u| u.id.to_s == fragment["id"] })
+
+          # skip when user is an existing one.
+          # return true if users[index] and users[index].model.persisted?
+
+          # replicate skip_if: :all_blank logic.
+          return true if fragment["email"].blank?
+        end
       end
     end
   end # Update
 
-
-  class Delete < Trailblazer::Operation
-    include CRUD # i don't want inheritance here.
+  class Show < Trailblazer::Operation
+    include CRUD
     model Thing, :find
 
-    policy do |params|
-      false
+    require "trailblazer/operation/policy"
+    include Trailblazer::Operation::Policy::Pundit
+    policy Thing::Policy, :show?
+
+    def policy
+      @policy
     end
-
-    def process(params)
-      model.destroy
-    end
+  end
 
 
-    # needs: Delete CRUD config
-    #        Delete #process
-    #        Update::SignedIn policy
-    class SignedIn < self
+  module Delete
+    class SignedIn < Trailblazer::Operation
+      # needs: Delete CRUD config
+      #        Delete #process
+      #        Update::SignedIn policy
       self.policy_class = Update::SignedIn.policy_class
+
+      include CRUD # i don't want inheritance here.
+      model Thing, :find
+
+      def process(params)
+        model.destroy
+      end
     end
   end
 end
 
-class ThingPolicy
-  def update?(user, thing)
-    user.owns?(thing) # FIXME: how to implement that nicely?
-  end
-end

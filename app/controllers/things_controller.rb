@@ -14,13 +14,15 @@ class ThingsController  < ApplicationController
       return redirect_to op.model
     end
 
-    # @form.prepopulate! # TODO: must be @form.render
     @form.prepopulate!
     render action: :new
   end
 
   def show
-    present Thing::Update
+    present Thing::Show
+    @op = @operation # FIXME.
+
+
     form Comment::Create # overrides @model and @form!
     @form.prepopulate!
   end
@@ -36,7 +38,7 @@ class ThingsController  < ApplicationController
   end
 
   def edit
-    form Thing::Update
+    form Thing::Update::SignedIn
 
     @form.prepopulate!
 
@@ -46,7 +48,7 @@ class ThingsController  < ApplicationController
   def update
     # require "pp"
     # pp Thing::Update.contract_class.object_representer_class.representable_attrs
-    run Thing::Update do |op|
+    run Thing::Update::SignedIn do |op|
       return redirect_to op.model
     end
 

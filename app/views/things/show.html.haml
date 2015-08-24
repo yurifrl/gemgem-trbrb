@@ -3,7 +3,10 @@
     = concept("thing/cell/decorator", @thing).(:thumb)
 
     #{@thing.name}
-    = link_to "Edit", edit_thing_path(@thing)
+    - if @op.policy.(:edit?)
+      = link_to "Edit", edit_thing_path(@thing)
+    - if @op.policy.(:delete?)
+      = link_to "Delete", thing_path(@thing), method: :delete
 
 .description
   #{@thing.description}
