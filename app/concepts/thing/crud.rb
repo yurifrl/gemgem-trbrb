@@ -165,6 +165,11 @@ class Thing < ActiveRecord::Base
     policy Thing::Policy, :show?
   end
 
+  # TODO: do that in contract, too, in chapter 8.
+  ImageProcessor = Struct.new(:image_meta_data) do
+    extend Paperdragon::Model::Writer
+    processable_writer :image
+  end
 
   module Delete
     class SignedIn < Trailblazer::Operation
@@ -185,17 +190,8 @@ class Thing < ActiveRecord::Base
       end
 
     private
-      class Bla < OpenStruct
-        extend Paperdragon::Model::Writer
-        processable_writer :image
-      end
-
       def delete_images!
-        # FIXME: make this nice, of course.
-        Bla.new(image_meta_data: model.image_meta_data).image! do |v|
-          # v.delete!(:original)
-          # v.reprocess!(:thumb)   { |job| job.thumb!("120x120#") }
-        end
+        ImageProcessor.new(model.image_meta_data).image! { |v| v.delete! }
       end
     end
   end

@@ -29,11 +29,10 @@ class ThingDeleteTest < MiniTest::Spec
     thing.destroyed?.must_equal true
   end
 
-      # Paperdragon::Attachment.new(thing.image_meta_data).exists?.must_equal true
-
-
-  it "deleted by author, no image, no comments" do
+  it "deleted by author, with images and comments" do
     thing = Thing::Create::SignedIn.(thing: {name: "Rails", is_author: "1", file: File.open("test/images/cells.jpg")}, current_user: current_user).model
+
+    file = Thing::Cell::Decorator.new(thing)
 
     thing = Thing::Delete::SignedIn.(id: thing.id, current_user: current_user).model
     thing.destroyed?.must_equal true
