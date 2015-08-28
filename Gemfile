@@ -28,7 +28,7 @@ end
 
 # gem "reform", github: "apotonick/reform", branch: "reform-2"
 # gem "reform", path: "../reform"
-gem "reform", "2.0.3  "
+gem "reform", "2.0.4"
 # gem "disposable", github: "apotonick/disposable"
 gem "virtus"
 
@@ -36,8 +36,8 @@ gem "virtus"
 gem "tyrant", path: "../tyrant"
 
 # gem "trailblazer", git: "https://github.com/apotonick/trailblazer.git"
-# gem "trailblazer", path: "../trailblazer"
-gem "trailblazer", "0.3.3"
+gem "trailblazer", path: "../trailblazer"
+# gem "trailblazer", "0.3.3"
 # gem "cells", git: "https://github.com/apotonick/cells"
 # gem "trailblazer", github: "apotonick/trailblazer"
 # gem "cells", path: "../cells"
@@ -47,7 +47,7 @@ gem "cells-haml", "0.0.8"
 gem "haml", github: "haml/haml", ref: "7c7c169"
 gem "kaminari-cells"
 
-gem "paperdragon", ">= 0.0.8"
+gem "paperdragon", ">= 0.0.9"
 gem "file_validators"
 gem "roar", "1.0.0"
 

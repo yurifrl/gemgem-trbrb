@@ -16,4 +16,11 @@ class ApplicationController < ActionController::Base
   def process_params!(params)
     params.merge!(current_user: tyrant.current_user)
   end
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  def user_not_authorized
+    flash[:message] = "Not authorized, my friend."
+    redirect_to root_path
+  end
 end

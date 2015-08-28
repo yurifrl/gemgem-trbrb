@@ -7,6 +7,13 @@ GIT
       tilt
 
 PATH
+  remote: ../trailblazer
+  specs:
+    trailblazer (0.3.3)
+      reform (>= 1.2.0)
+      uber (>= 0.0.10)
+
+PATH
   remote: ../tyrant
   specs:
     tyrant (0.0.1)
@@ -92,7 +99,7 @@ GEM
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    disposable (0.1.9)
+    disposable (0.1.11)
       representable (>= 2.2.3, <= 2.3.0)
       uber
     dragonfly (1.0.10)
@@ -170,7 +177,7 @@ GEM
     multi_json (1.11.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    paperdragon (0.0.8)
+    paperdragon (0.0.9)
       dragonfly
       uber
     pg (0.18.2)
@@ -216,12 +223,10 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
     ref (1.0.5)
-    reform (2.0.3)
-      disposable (~> 0.1.9)
+    reform (2.0.4)
+      disposable (~> 0.1.11)
       uber (~> 0.0.11)
-    representable (2.2.3)
-      multi_json
-      nokogiri
+    representable (2.3.0)
       uber (~> 0.0.7)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -258,12 +263,9 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    trailblazer (0.3.3)
-      reform (>= 1.2.0)
-      uber (>= 0.0.10)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uber (0.0.13)
+    uber (0.0.14)
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -295,7 +297,7 @@ DEPENDENCIES
   kaminari-cells
   minitest-line
   minitest-rails-capybara
-  paperdragon (>= 0.0.8)
+  paperdragon (>= 0.0.9)
   pg
   pundit
   quiet_assets
@@ -303,14 +305,14 @@ DEPENDENCIES
   rails-timeago
   rails_12factor
   rails_layout
-  reform (= 2.0.3)
+  reform (= 2.0.4)
   responders
   roar (= 1.0.0)
   sass-rails (~> 4.0.3)
   simple_form
   therubyracer
   thin
-  trailblazer (= 0.3.3)
+  trailblazer!
   tyrant!
   uglifier (>= 1.3.0)
   virtus

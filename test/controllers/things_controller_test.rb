@@ -2,7 +2,19 @@ require 'test_helper'
 
 class ThingsControllerTest < IntegrationTest
   let (:thing) do
-    thing = Thing::Create[thing: {name: "Rails"}].model
+    thing = Thing::Create.(thing: {name: "Rails"}).model
+
+    Comment::Create.(comment: {body: "Excellent", weight: "0", user: {email: "zavan@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "!Well.", weight: "1", user: {email: "jonny@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "Cool stuff!", weight: "0", user: {email: "chris@trb.org"}}, id: thing.id)
+    Comment::Create.(comment: {body: "Improving.", weight: "1", user: {email: "hilz@trb.org"}}, id: thing.id)
+
+    thing
+  end
+
+  # FIXME: make that via thing(users: []).
+  let (:thing_with_fred) do
+    thing = Thing::Create.(thing: {name: "Rails", users: [{"email" => "fred@trb.org"}]}).model
 
     Comment::Create.(comment: {body: "Excellent", weight: "0", user: {email: "zavan@trb.org"}}, id: thing.id)
     Comment::Create.(comment: {body: "!Well.", weight: "1", user: {email: "jonny@trb.org"}}, id: thing.id)
@@ -115,14 +127,23 @@ class ThingsControllerTest < IntegrationTest
   end
 
   describe "#edit" do
-    it do
+    # not signed-in.
+    it "doesn't work with not signed-in" do
       thing = Thing::Create[thing: {"name" => "Rails", "users" => [{"email" => "joe@trb.org"}]}].model
 
       visit "/things/#{thing.id}/edit"
+      page.current_path.must_equal "/"
+    end
+
+    it do
+      sign_in!()
+      # thing = Thing::Create[thing: {"name" => "Rails", "users" => [{"email" => "fred@trb.org"}]}].model
+
+      visit "/things/#{thing_with_fred.id}/edit"
 
       page.must_have_css "form #thing_name.readonly[value='Rails']"
       # existing email is readonly.
-      page.must_have_css "#thing_users_attributes_0_email.readonly[value='joe@trb.org']"
+      page.must_have_css "#thing_users_attributes_0_email.readonly[value='fred@trb.org']"
       # remove button for existing.
       page.must_have_css "#thing_users_attributes_0_remove"
       # empty email for new.
@@ -130,24 +151,30 @@ class ThingsControllerTest < IntegrationTest
       # no remove for new.
       page.wont_have_css "#thing_users_attributes_1_remove"
     end
+
+    # TODO: test signed in, but different user.
   end
 
   describe "#update" do
     it do
+      sign_in!()
+
       # put :update, id: thing.id, thing: {name: "Trb"}
-      visit edit_thing_path(thing.id)
+      visit edit_thing_path(thing_with_fred.id)
       fill_in 'Description', with: "Primitive MVC"
       click_button "Update Thing"
 
       # assert_redirected_to thing_path(thing)
-      page.current_path.must_equal thing_path(thing.id)
+      page.current_path.must_equal thing_path(thing_with_fred.id)
       page.must_have_css "h1", text: "Rails"
       page.must_have_content "Primitive MVC"
     end
 
     it do
+      sign_in!()
+
       # put :update, id: thing.id, thing: {description: "bla"}
-      visit edit_thing_path(thing.id)
+      visit edit_thing_path(thing_with_fred.id)
       fill_in 'Description', with: "bla"
       click_button "Update Thing"
 

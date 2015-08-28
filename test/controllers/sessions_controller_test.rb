@@ -158,7 +158,7 @@ class SessionsControllerTest < IntegrationTest
 
   end
 
-
+  # FIXME: redundant from test_helper.
   def submit_sign_up!(email, password, confirm)
     within("//form[@id='new_user']") do
       fill_in 'Email',    with: email
