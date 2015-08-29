@@ -1,10 +1,23 @@
 class ThingsController  < ApplicationController
   respond_to :html
 
+  require_dependency "session/impersonate"
+  before_filter { Session::Impersonate.(params) } # TODO: allow Op.(params, session)
+  module BeforeFilter
+    def process_params!(params)
+      # super # from ApplicationController
+      # #params.merge!(current_user: tyrant.current_user)
+      # Session::Impersonate.(params)
+      params
+    end
+  end
+  include BeforeFilter
+
   def new
     # return render text: "yoo"
     # Thing::Create
     # return render text: "yoooo"
+
     form Thing::Create
     @form.prepopulate!
   end
@@ -40,6 +53,8 @@ class ThingsController  < ApplicationController
   end
 
   def edit
+    puts "edit: @@@@??@ #{params.inspect}"
+
     form Thing::Update::SignedIn
 
     @form.prepopulate!

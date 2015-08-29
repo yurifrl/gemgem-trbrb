@@ -121,9 +121,12 @@ class Thing < ActiveRecord::Base
 
   module Update
     class SignedIn < Create
-      # builds do |params|
-      #   SignedIn if params[:current_user]
-      # end
+      builds do |params|
+        SignedIn if params[:current_user]
+
+        Admin if params[:current_user] and params[:current_user].email == "apotonick@gmail.com"
+      end
+
       action :update
 
       include Thing::SignedIn
@@ -154,6 +157,11 @@ class Thing < ActiveRecord::Base
           return true if fragment["email"].blank?
         end
       end
+    end # SignedIn
+
+    class Admin < SignedIn
+      self.policy_class = nil
+
     end
   end # Update
 

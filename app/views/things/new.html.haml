@@ -1,5 +1,7 @@
 %h3 What do you want to talk about?
 
+= "AAADMIIIN" if @operation.is_a? Thing::Update::Admin
+
 = simple_form_for @form do |f|
   - # TODO: can anyone please make things work with simple_form so we don't have to specify label: false, etc. everywhere?
   = f.input :name, placeholder: "Name", label: false, readonly: @form.readonly?(:name)
@@ -10,6 +12,7 @@
     %legend Do you know any authors?
 
     - if tyrant.signed_in?
+      -# or policy.edit? or @op.is_a? Update::SignedIn or simply by using a signed in cell
       .row
         = f.input :is_author, as: :boolean, label: "I'm the author!"
 
@@ -25,6 +28,3 @@
   = f.button :submit, class: :expand
 
 = @form.errors.messages
-
-/ # TODO: can anyone make this beautiful by using the foundation grid? I know, simple_form messes up the markup, but there must
-/ be a way to make this better. Please help!
