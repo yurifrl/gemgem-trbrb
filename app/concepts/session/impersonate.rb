@@ -13,6 +13,7 @@ module Session
 
       # @model = params[:current_user]
       params[:current_user] = simulated
+      params[:real_user]    = params[:tyrant].current_user
       puts "??? after #{params.inspect}"
     end
   end
