@@ -11,7 +11,7 @@
     = csrf_meta_tags
   %body
     %header
-      = render 'layouts/navigation'
+      = concept "navigation/cell", tyrant
     %main{:role => "main"}
       = render 'layouts/messages'
       = yield
