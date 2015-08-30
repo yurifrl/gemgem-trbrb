@@ -15,7 +15,7 @@ module Navigation
     end
 
     def current_user
-      model.current_user
+      @options[:current_user]
     end
 
     def welcome_signed_in

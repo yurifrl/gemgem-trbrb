@@ -11,13 +11,10 @@ class ThingsController  < ApplicationController
   end
 
   def new
-    # return render text: "yoo"
-    # Thing::Create
-    # return render text: "yoooo"
-
     form Thing::Create
     @form.prepopulate!
-    render text: concept("thing/cell/form", @form, op: @operation, signed_in: tyrant.signed_in?), layout: true
+
+    render_form
   end
 
   def create
@@ -26,7 +23,7 @@ class ThingsController  < ApplicationController
     end
 
     @form.prepopulate!
-    render action: :new
+    render_form
   end
 
   def show
@@ -86,5 +83,13 @@ class ThingsController  < ApplicationController
     present Thing::Show
 
     render js: concept("comment/cell/grid", @thing, page: params[:page]).(:append)
+  end
+
+private
+  def render_form
+    render text: concept("thing/cell/form", @form,
+        admin: (@operation.is_a? Thing::Update::Admin or @operation.is_a? Thing::Create::Admin),
+        signed_in: tyrant.signed_in?),
+      layout: true
   end
 end

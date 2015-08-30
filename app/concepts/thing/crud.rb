@@ -34,9 +34,9 @@ class Thing < ActiveRecord::Base
 
 
   class Create < Trailblazer::Operation
-    builds do |params|
-      SignedIn if params[:current_user]
-      Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
+    builds -> (params) do
+      return Admin if params[:current_user] and params[:current_user].email == "admin@trb.org" # use policy here that builds model in class context?
+      return SignedIn if params[:current_user]
     end
 
     include CRUD#, Dispatch

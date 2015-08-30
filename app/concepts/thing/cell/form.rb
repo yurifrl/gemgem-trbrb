@@ -6,13 +6,23 @@ class Thing::Cell::Form < ::Cell::Concept
 
 
   def show
-    @operation = options[:op]
     @form = model
 
     render :form
   end
 
+private
+  def css_class
+    return "admin" if admin?
+    ""
+  end
+
+  # this will be ::property :signed_in?, boolean: true
   def signed_in?
     @options[:signed_in]
+  end
+
+  def admin?
+    @options[:admin]
   end
 end

@@ -1,8 +1,6 @@
 %h3 What do you want to talk about?
 
-= "AAADMIIIN" if @operation.is_a? Thing::Update::Admin or @operation.is_a? Thing::Create::Admin
-
-= simple_form_for @form do |f|
+= simple_form_for @form, html: { class: css_class} do |f|
   - # TODO: can anyone please make things work with simple_form so we don't have to specify label: false, etc. everywhere?
   = f.input :name, placeholder: "Name", label: false, readonly: @form.readonly?(:name)
   = f.input :description, placeholder: "Description", label: false
