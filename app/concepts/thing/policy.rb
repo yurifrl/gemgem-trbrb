@@ -7,6 +7,7 @@ class Thing::Policy
   def initialize(user, model)
     @user, @model, @params = user, model, nil
   end
+  include Gemgem::Policy
 
   def create?
     true
@@ -23,11 +24,15 @@ class Thing::Policy
   end
 
   def edit?
-    model.users.include?(user)
+    admin? or model.users.include?(user)
   end
 
   def delete?
     edit?
+  end
+
+  def admin?
+    admin_for?(user) # from Gemgem::Policy.
   end
 
   alias_method :call, :send # FIXME: used in @op.policy.(:show?)

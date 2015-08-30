@@ -1,15 +1,6 @@
 class ThingsController  < ApplicationController
   respond_to :html
 
-  require_dependency "session/impersonate"
-  before_filter { Session::Impersonate.(params.merge!(tyrant: tyrant)) } # TODO: allow Op.(params, session)
-  def process_params!(params)
-    # super # from ApplicationController
-    # #params.merge!(current_user: tyrant.current_user)
-    # Session::Impersonate.(params)
-    params
-  end
-
   def new
     form Thing::Create
     @form.prepopulate!
@@ -54,7 +45,7 @@ class ThingsController  < ApplicationController
 
     @form.prepopulate!
 
-    render action: :new
+    render_form
   end
 
   def update

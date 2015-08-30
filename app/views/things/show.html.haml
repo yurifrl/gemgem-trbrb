@@ -6,6 +6,7 @@
 
     #{@thing.name}
     - if @op.policy.(:edit?)
+      - # TODO: test links with admin, owner, non-owner.
       = link_to "Edit", edit_thing_path(@thing)
     - if @op.policy.(:delete?)
       = link_to "Delete", thing_path(@thing), method: :delete
