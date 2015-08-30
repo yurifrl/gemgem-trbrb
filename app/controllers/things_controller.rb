@@ -17,6 +17,7 @@ class ThingsController  < ApplicationController
 
     form Thing::Create
     @form.prepopulate!
+    render text: concept("thing/cell/form", @form, op: @operation, signed_in: tyrant.signed_in?), layout: true
   end
 
   def create
