@@ -4,6 +4,12 @@ module Session
     # that keeps all that data (logged in, impersonate, params, session, etc.) but to
     # experiment, i use params, Scharrels. ;)
     def process(params)
+
+      # TODO: different Op, this is what usually happens in #process_params!
+      params[:current_user] = params[:tyrant].current_user
+
+
+
       # TODO: policy if admin!
       # don't access tyrant global anywhere.
 

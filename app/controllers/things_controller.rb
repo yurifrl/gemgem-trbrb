@@ -3,15 +3,12 @@ class ThingsController  < ApplicationController
 
   require_dependency "session/impersonate"
   before_filter { Session::Impersonate.(params.merge!(tyrant: tyrant)) } # TODO: allow Op.(params, session)
-  module BeforeFilter
-    def process_params!(params)
-      # super # from ApplicationController
-      # #params.merge!(current_user: tyrant.current_user)
-      # Session::Impersonate.(params)
-      params
-    end
+  def process_params!(params)
+    # super # from ApplicationController
+    # #params.merge!(current_user: tyrant.current_user)
+    # Session::Impersonate.(params)
+    params
   end
-  include BeforeFilter
 
   def new
     # return render text: "yoo"

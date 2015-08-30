@@ -36,6 +36,7 @@ class Thing < ActiveRecord::Base
   class Create < Trailblazer::Operation
     builds do |params|
       SignedIn if params[:current_user]
+      Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
     end
 
     include CRUD#, Dispatch
@@ -44,6 +45,8 @@ class Thing < ActiveRecord::Base
     require_dependency "thing/contract"
     self.contract_class = Contract
     contract_class.model Thing # TODO: do this automatically.
+
+    # policy Thing, :create?, "signed_in" (can be infered from class?)
 
     class IsLimitReached
       def self.call(user, errors)
@@ -114,6 +117,10 @@ class Thing < ActiveRecord::Base
     class SignedIn < self
       include Thing::SignedIn
     end
+
+    class Admin < self
+      include Thing::SignedIn
+    end
   end
 
 
@@ -124,7 +131,7 @@ class Thing < ActiveRecord::Base
       builds do |params|
         SignedIn if params[:current_user]
 
-        Admin if params[:current_user] and params[:current_user].email == "apotonick@gmail.com"
+        Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
       end
 
       action :update
@@ -161,7 +168,6 @@ class Thing < ActiveRecord::Base
 
     class Admin < SignedIn
       self.policy_class = nil
-
     end
   end # Update
 
