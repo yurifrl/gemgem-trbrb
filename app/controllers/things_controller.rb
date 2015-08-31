@@ -41,7 +41,7 @@ class ThingsController  < ApplicationController
   def edit
     puts "edit: @@@@??@ #{params.inspect}"
 
-    form Thing::Update::SignedIn
+    form Thing::Update
 
     @form.prepopulate!
 
@@ -51,7 +51,7 @@ class ThingsController  < ApplicationController
   def update
     # require "pp"
     # pp Thing::Update.contract_class.object_representer_class.representable_attrs
-    run Thing::Update::SignedIn do |op|
+    run Thing::Update do |op|
       return redirect_to op.model
     end
 
@@ -62,7 +62,7 @@ class ThingsController  < ApplicationController
 
   # TODO: test me.
   def destroy
-    run Thing::Delete::SignedIn do |op|
+    run Thing::Delete do |op|
       flash[:notice] = "#{op.model.name} deleted."
       return redirect_to root_path
     end

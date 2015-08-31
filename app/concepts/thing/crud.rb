@@ -126,21 +126,19 @@ class Thing < ActiveRecord::Base
 
 
 
-  module Update
+  class Update < Trailblazer::Operation
+    builds do |params|
+      SignedIn if params[:current_user]
+      Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
+    end
+
+    include Trailblazer::Operation::Policy::Pundit
+    policy Thing::Policy, :update?
+
     class SignedIn < Create
-      builds do |params|
-        SignedIn if params[:current_user]
-
-        Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
-      end
-
       action :update
 
       include Thing::SignedIn
-
-      include Trailblazer::Operation::Policy::Pundit
-      policy Thing::Policy, :update?
-
 
       # skip_dispatch :notify_authors!
 
@@ -168,6 +166,10 @@ class Thing < ActiveRecord::Base
 
     class Admin < SignedIn
       self.policy_class = nil
+
+      contract do
+        property :name
+      end
     end
   end # Update
 
