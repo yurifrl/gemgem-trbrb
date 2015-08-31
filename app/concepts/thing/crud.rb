@@ -125,17 +125,24 @@ class Thing < ActiveRecord::Base
 
 
 
-
+  require "trailblazer/operation/crud/class_builder"
   class Update < Trailblazer::Operation
-    builds do |params|
-      SignedIn if params[:current_user]
-      Admin if params[:current_user] and params[:current_user].email == "admin@trb.org"
+    include CRUD::ClassBuilder
+    model Thing, :update
+
+    builds -> (model, params) do
+      policy = policy_class.first.new(params[:current_user], model)
+
+      return Admin    if policy.admin?
+      return SignedIn if policy.signed_in?
     end
 
     include Trailblazer::Operation::Policy::Pundit
     policy Thing::Policy, :update?
 
     class SignedIn < Create
+      include CRUD::ClassBuilder
+      model Thing
       action :update
 
       include Thing::SignedIn
