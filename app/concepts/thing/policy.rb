@@ -1,4 +1,6 @@
 class Thing::Policy
+  include Gemgem::Policy
+
   # def update?(user, thing)
   #   user.owns?(thing) # FIXME: how to implement that nicely?
   # end
@@ -7,7 +9,6 @@ class Thing::Policy
   def initialize(user, model)
     @user, @model, @params = user, model, nil
   end
-  include Gemgem::Policy
 
   def create?
     true
@@ -24,7 +25,7 @@ class Thing::Policy
   end
 
   def edit?
-    admin? or model.users.include?(user)
+    signed_in? and (admin? or model.users.include?(user))
   end
 
   def delete?
