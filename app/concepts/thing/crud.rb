@@ -130,15 +130,17 @@ class Thing < ActiveRecord::Base
     include CRUD::ClassBuilder
     model Thing, :update
 
+    include Trailblazer::Operation::Policy::Pundit
+    policy Thing::Policy, :update?
+
     builds -> (model, params) do
-      policy = policy_class.first.new(params[:current_user], model)
+      policy = build_policy(model, params)
 
       return Admin    if policy.admin?
       return SignedIn if policy.signed_in?
     end
 
-    include Trailblazer::Operation::Policy::Pundit
-    policy Thing::Policy, :update?
+
 
     class SignedIn < Create
       include CRUD::ClassBuilder
@@ -172,8 +174,6 @@ class Thing < ActiveRecord::Base
     end # SignedIn
 
     class Admin < SignedIn
-      self.policy_class = nil
-
       contract do
         property :name
       end
