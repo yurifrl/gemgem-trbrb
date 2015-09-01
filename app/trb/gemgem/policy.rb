@@ -20,6 +20,7 @@ module Gemgem
     end
 
     def admin_for?(user)
+      return false unless user
       user.email == "admin@trb.org"
     end
   end
