@@ -1,8 +1,8 @@
 %h3 What do you want to talk about?
 
-= simple_form_for @form, html: { class: css_class} do |f|
+= simple_form_for model, html: { class: css_class} do |f|
   - # TODO: can anyone please make things work with simple_form so we don't have to specify label: false, etc. everywhere?
-  = f.input :name, placeholder: "Name", label: false, readonly: @form.readonly?(:name)
+  = f.input :name, placeholder: "Name", label: false, readonly: model.readonly?(:name)
   = f.input :description, placeholder: "Description", label: false
   = f.input :file, as: :file
 
@@ -24,4 +24,4 @@
 
   = f.button :submit, class: :expand
 
-= @form.errors.messages
+= model.errors.messages

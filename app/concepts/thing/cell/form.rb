@@ -6,8 +6,6 @@ class Thing::Cell::Form < ::Cell::Concept
 
 
   def show
-    @form = model
-
     render :form
   end
 
