@@ -9,6 +9,7 @@
 #   save => users = [user] (without deleted), removes user from collection.
 require_dependency "thing/policy"
 require "trailblazer/operation/policy"
+require "trailblazer/operation/crud/class_builder"
 
 class Thing < ActiveRecord::Base
   module SignedIn
@@ -34,19 +35,25 @@ class Thing < ActiveRecord::Base
 
 
   class Create < Trailblazer::Operation
-    builds -> (params) do
-      return Admin if params[:current_user] and params[:current_user].email == "admin@trb.org" # use policy here that builds model in class context?
-      return SignedIn if params[:current_user]
+    include Trailblazer::Operation::Policy::Pundit
+    policy Thing::Policy, :create?
+    # policy Thing, :create?, "signed_in" (can be infered from class?)
+
+    builds -> (model, params) do
+      policy = build_policy(model, params)
+
+      return self::Admin    if policy.admin?
+      return self::SignedIn if policy.signed_in?
     end
 
-    include CRUD#, Dispatch
+    include CRUD::ClassBuilder
     model Thing, :create
 
     require_dependency "thing/contract"
     self.contract_class = Contract
     contract_class.model Thing # TODO: do this automatically.
 
-    # policy Thing, :create?, "signed_in" (can be infered from class?)
+
 
     class IsLimitReached
       def self.call(user, errors)
@@ -125,7 +132,7 @@ class Thing < ActiveRecord::Base
 
 
 
-  require "trailblazer/operation/crud/class_builder"
+
   class Update < Trailblazer::Operation
     include CRUD::ClassBuilder
     model Thing, :update
@@ -133,12 +140,7 @@ class Thing < ActiveRecord::Base
     include Trailblazer::Operation::Policy::Pundit
     policy Thing::Policy, :update?
 
-    builds -> (model, params) do
-      policy = build_policy(model, params)
-
-      return Admin    if policy.admin?
-      return SignedIn if policy.signed_in?
-    end
+    self.builder_class = Create.builder_class
 
 
 

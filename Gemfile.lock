@@ -11,7 +11,7 @@ PATH
   specs:
     trailblazer (0.3.3)
       reform (>= 1.2.0)
-      uber (>= 0.0.10)
+      uber (>= 0.0.15)
 
 PATH
   remote: ../tyrant
@@ -265,7 +265,7 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uber (0.0.14)
+    uber (0.0.15)
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)

@@ -78,6 +78,7 @@ class ThingsController  < ApplicationController
 
 private
   def render_form
+    # raise @operation.class.inspect
     render text: concept("thing/cell/form", @form,
         admin: (@operation.is_a? Thing::Update::Admin or @operation.is_a? Thing::Create::Admin),
         signed_in: tyrant.signed_in?),
