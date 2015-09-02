@@ -64,6 +64,8 @@ class ThingDeleteTest < MiniTest::Spec
     end
 
 
+
+    # edge-case: with image.
     it "deleted by author, with images and comments" do
       thing = Thing::Create.(thing: {name: "Rails", is_author: "1", file: File.open("test/images/cells.jpg")}, current_user: current_user).model
 
