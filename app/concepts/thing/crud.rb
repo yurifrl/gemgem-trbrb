@@ -1,8 +1,4 @@
-# TODO: policy: users can only delete authors when they added them? Delete things. (chapt 9)
-
-# EXPLAIN validation/table lock etc. later
 # split up files (update goes to separate.) split up contract?
-# form: presentation logic for form. (use cell?)
 # talk about this? http://stackoverflow.com/questions/4116415/preselect-check-box-with-rails-simple-form
 
 # how does skipping work: Form.new[user, user2], then validate with [user, user2:skip,user], user2 will still be there but not updated.
@@ -24,7 +20,6 @@ class Thing < ActiveRecord::Base
     end
 
     def add_current_user_as_author!(thing)
-      # puts "@@@@@ #{thing.is_author.inspect}"
       thing.users << @current_user
     end
 
@@ -38,6 +33,8 @@ class Thing < ActiveRecord::Base
     include Trailblazer::Operation::Policy::Pundit
     policy Thing::Policy, :create?
     # policy Thing, :create?, "signed_in" (can be infered from class?)
+    include CRUD::ClassBuilder
+    model Thing, :create
 
     builds -> (model, params) do
       policy = build_policy(model, params)
@@ -46,8 +43,7 @@ class Thing < ActiveRecord::Base
       return self::SignedIn if policy.signed_in?
     end
 
-    include CRUD::ClassBuilder
-    model Thing, :create
+
 
     require_dependency "thing/contract"
     self.contract_class = Contract
@@ -149,9 +145,10 @@ class Thing < ActiveRecord::Base
       model Thing
       action :update
 
-      include Thing::SignedIn
 
-      # skip_dispatch :notify_authors!
+
+      include Thing::SignedIn
+      policy Thing::Policy, :update?
 
       contract do
         property :name, writeable: false
@@ -196,22 +193,30 @@ class Thing < ActiveRecord::Base
     processable_writer :image
   end
 
-  module Delete
-    class SignedIn < Trailblazer::Operation
+  class Delete < Trailblazer::Operation
+    include CRUD::ClassBuilder
+    model Thing, :find
+
+    include Trailblazer::Operation::Policy::Pundit
+    policy Thing::Policy, :delete?
+
+    # self.builder_class = Create.builder_class
+    builds -> (model, params) do
+      policy = build_policy(model, params)
+
+      return self::SignedIn if policy.admin?
+      return self::SignedIn if policy.signed_in?
+    end
+
+    class SignedIn < self
       # needs: Delete CRUD config
       #        Delete #process
       #        Update::SignedIn policy
       # self.policy_class = Update::SignedIn.policy_class
 
-      include Trailblazer::Operation::Policy::Pundit
-      policy Thing::Policy, :delete?
-
-      include CRUD # i don't want inheritance here.
-      model Thing, :find
-
       def process(params)
-        delete_images!
         model.destroy
+        delete_images!
       end
 
     private
