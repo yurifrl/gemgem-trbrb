@@ -7,14 +7,14 @@ GIT
       tilt
 
 PATH
-  remote: ../trailblazer
+  remote: vendor/gems/trailblazer
   specs:
     trailblazer (0.3.3)
       reform (>= 1.2.0)
-      uber (>= 0.0.15)
+      uber (>= 0.0.10)
 
 PATH
-  remote: ../tyrant
+  remote: vendor/gems/tyrant
   specs:
     tyrant (0.0.1)
       bcrypt
@@ -319,4 +319,4 @@ DEPENDENCIES
   warden
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
