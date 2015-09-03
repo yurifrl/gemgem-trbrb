@@ -10,14 +10,14 @@ class ThingDeleteTest < MiniTest::Spec
 
     # anonymous
     it "can't be deleted" do
-      assert_raises Pundit::NotAuthorizedError do
+      assert_raises Trailblazer::NotAuthorizedError do
         Thing::Delete.(id: thing.id)
       end
     end
 
     # signed in.
     it "can't be deleted" do
-      assert_raises Pundit::NotAuthorizedError do
+      assert_raises Trailblazer::NotAuthorizedError do
         Thing::Delete.(id: thing.id, current_user: current_user)
       end
     end
@@ -35,7 +35,7 @@ class ThingDeleteTest < MiniTest::Spec
 
     # anonymous
     it "can't be deleted" do
-      assert_raises Pundit::NotAuthorizedError do
+      assert_raises Trailblazer::NotAuthorizedError do
         Thing::Delete.(id: thing.id)
       end
     end
@@ -44,7 +44,7 @@ class ThingDeleteTest < MiniTest::Spec
     it "can't be deleted because we're not author" do
       thing = Thing::Create.(thing: {name: "Rails", users: [{"email"=>"joe@trb.org"}]}, current_user: current_user).model
 
-      assert_raises Pundit::NotAuthorizedError do
+      assert_raises Trailblazer::NotAuthorizedError do
         Thing::Delete.(id: thing.id, current_user: current_user)
       end
     end

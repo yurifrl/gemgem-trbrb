@@ -4,7 +4,7 @@ class ThingPolicyTest < MiniTest::Spec
   let (:author) { User::Create.(user: {email: "jd@trb.org"}).model }
   let (:thing) { Thing::Create.(thing: {name: "Bad Religion", users: [{"email" => author.email}]}).model }
 
-  let (:policy) { Thing::Update.policy_class.new(user, thing) }
+  let (:policy) { Thing::Update.policy_config.policy(user, thing) }
 
 
   describe "NOT signed in" do
@@ -17,13 +17,13 @@ class ThingPolicyTest < MiniTest::Spec
     it { policy.update?.must_equal false }
     # is author
     it do
-      policy = Thing::Update.policy_class.new(author, thing)
+      policy = Thing::Update.policy_config.policy(author, thing)
       policy.update?.must_equal true
     end
 
     # not author
     it do
-      policy = Thing::Update.policy_class.new(user, thing)
+      policy = Thing::Update.policy_config.policy(user, thing)
       policy.update?.must_equal false
     end
   end
@@ -34,14 +34,14 @@ class ThingPolicyTest < MiniTest::Spec
     # is author
     it do
       thing  = Thing::Create.(thing: {name: "Bad Religion", users: [{"email"=>admin.email}]}).model
-      policy = Thing::Update.policy_class.new(admin, thing)
+      policy = Thing::Update.policy_config.policy(admin, thing)
 
       policy.update?.must_equal true
     end
 
     # not author
     it do
-      policy = Thing::Update.policy_class.new(admin, thing)
+      policy = Thing::Update.policy_config.policy(admin, thing)
       policy.update?.must_equal true
     end
   end

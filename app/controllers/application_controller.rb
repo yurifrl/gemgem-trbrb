@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     params
   end
 
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from Trailblazer::NotAuthorizedError, with: :user_not_authorized
 
   def user_not_authorized
     flash[:message] = "Not authorized, my friend."

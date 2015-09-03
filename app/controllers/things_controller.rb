@@ -49,15 +49,12 @@ class ThingsController  < ApplicationController
   end
 
   def update
-    # require "pp"
-    # pp Thing::Update.contract_class.object_representer_class.representable_attrs
     run Thing::Update do |op|
       return redirect_to op.model
     end
 
-
     # @form.prepopulate!
-    render action: :new
+    render_form
   end
 
   # TODO: test me.

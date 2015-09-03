@@ -30,14 +30,14 @@ class Thing < ActiveRecord::Base
 
 
   class Create < Trailblazer::Operation
-    include Trailblazer::Operation::Policy::Pundit
+    include Trailblazer::Operation::Policy
     policy Thing::Policy, :create?
     # policy Thing, :create?, "signed_in" (can be infered from class?)
     include CRUD::ClassBuilder
     model Thing, :create
 
     builds -> (model, params) do
-      policy = build_policy(model, params)
+      policy = policy_config.policy(params[:current_user], model)
 
       return self::Admin    if policy.admin?
       return self::SignedIn if policy.signed_in?
@@ -132,8 +132,7 @@ class Thing < ActiveRecord::Base
   class Update < Trailblazer::Operation
     include CRUD::ClassBuilder
     model Thing, :update
-
-    include Trailblazer::Operation::Policy::Pundit
+    include Trailblazer::Operation::Policy
     policy Thing::Policy, :update?
 
     self.builder_class = Create.builder_class
@@ -183,7 +182,7 @@ class Thing < ActiveRecord::Base
     include CRUD
     model Thing, :find
 
-    include Trailblazer::Operation::Policy::Pundit
+    include Trailblazer::Operation::Policy
     policy Thing::Policy, :show?
   end
 
